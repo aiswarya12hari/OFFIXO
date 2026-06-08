@@ -5,15 +5,19 @@ class ApiConfig {
     return dotenv.env['BASE_URL'] ?? '';
   }
 
-  // MEMBER LOGIN API
   static String get memberLoginUrl {
     return '$baseUrl/api/accounts/member/login/';
   }
 
-  // MEMBER PROFILE API
   static String get memberProfileUrl {
     return '$baseUrl/api/accounts/member/profile/';
   }
 
-  
+  static String get checkInUrl {
+    return '$baseUrl/api/attendance/checkin/';
+  }
+
+  static String get checkOutUrl {
+    return '$baseUrl/api/attendance/checkout/';
+  }
 }

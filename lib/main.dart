@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:offixo/PROVIDER/Login%20Page/login_provider.dart';
 import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
+import 'package:offixo/PROVIDER/Verification%20Page/checkin_provider.dart';
+import 'package:offixo/PROVIDER/Verification%20Page/checkout_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:offixo/VIEW/Login%20page/login_screen.dart';
 import 'package:offixo/VIEW/Onboarding%20page/onboarding_screen.dart';
@@ -21,21 +23,15 @@ class OffixoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => LoginProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) =>
-              ProfileProvider(),
-        ),
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => CheckInProvider()),
+        ChangeNotifierProvider(create: (_) => CheckOutProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: OnboardingScreen(),
-        routes: {
-          '/login': (context) =>
-               LoginScreen(),
-        },
+        routes: {'/login': (context) => LoginScreen()},
       ),
     );
   }

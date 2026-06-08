@@ -31,10 +31,12 @@ class _ProfileScreenState
     return Scaffold(
       backgroundColor:
           AppStyle.backgroundColor,
+
       appBar: AppBar(
         backgroundColor:
             AppStyle.backgroundColor,
         elevation: 0,
+
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_rounded,
@@ -44,6 +46,7 @@ class _ProfileScreenState
           onPressed: () =>
               Navigator.pop(context),
         ),
+
         title: Text(
           'Profile',
           style:
@@ -58,6 +61,7 @@ class _ProfileScreenState
           ),
         ),
       ),
+
       body:
           Consumer<ProfileProvider>(
         builder: (
@@ -87,25 +91,13 @@ class _ProfileScreenState
             child:
                 SingleChildScrollView(
               padding:
-                  EdgeInsets.symmetric(
-                horizontal:
-                    AppStyle
-                        .responsiveWidth(
-                  context,
-                  20,
-                ),
-                vertical:
-                    AppStyle
-                        .responsiveHeight(
-                  context,
-                  24,
-                ),
+                  const EdgeInsets.all(
+                20,
               ),
               child: Column(
                 children: [
-                  /// PROFILE IMAGE
                   CircleAvatar(
-                    radius: 45,
+                    radius: 50,
                     backgroundImage:
                         profile.faceImage
                                 .isNotEmpty
@@ -124,74 +116,28 @@ class _ProfileScreenState
                         : null,
                   ),
 
-                  SizedBox(
-                    height:
-                        AppStyle
-                            .responsiveHeight(
-                      context,
-                      16,
-                    ),
+                  const SizedBox(
+                    height: 15,
                   ),
 
-                  /// NAME
                   Text(
                     profile.fullName,
-                    style:
-                        AppStyle
-                            .jakartaText(
-                      context:
-                          context,
-                      size: 22,
-                      weight:
-                          FontWeight
-                              .w600,
-                      color:
-                          AppStyle
-                              .primaryColor,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight:
+                          FontWeight.bold,
                     ),
                   ),
 
-                  SizedBox(
-                    height:
-                        AppStyle
-                            .responsiveHeight(
-                      context,
-                      4,
-                    ),
-                  ),
-
-                  /// ROLE
                   Text(
-                    profile
-                        .designation,
-                    style:
-                        AppStyle
-                            .jakartaText(
-                      context:
-                          context,
-                      size: 14,
-                      weight:
-                          FontWeight
-                              .w400,
-                      color:
-                          const Color(
-                        0xFF6B7280,
-                      ),
-                    ),
+                    profile.designation,
                   ),
 
-                  SizedBox(
-                    height:
-                        AppStyle
-                            .responsiveHeight(
-                      context,
-                      30,
-                    ),
+                  const SizedBox(
+                    height: 25,
                   ),
 
                   Container(
-                    width:
-                        double.infinity,
                     padding:
                         const EdgeInsets
                             .all(20),
@@ -208,32 +154,120 @@ class _ProfileScreenState
                     child: Column(
                       children: [
                         _profileRow(
-                          context,
-                          Icons
-                              .email_outlined,
-                          "Email",
-                          profile
-                              .email,
-                        ),
-                        const Divider(),
+                            Icons.badge,
+                            "Employee No",
+                            profile.empNo),
+
+                        _divider(),
 
                         _profileRow(
-                          context,
-                          Icons
-                              .phone_outlined,
-                          "Phone",
-                          profile
-                              .phoneNumber,
-                        ),
-                        const Divider(),
+                            Icons.email,
+                            "Email",
+                            profile.email),
+
+                        _divider(),
 
                         _profileRow(
-                          context,
-                          Icons
-                              .business_outlined,
-                          "Organization",
+                            Icons.phone,
+                            "Phone",
+                            profile.phoneNumber),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.work,
+                            "Member Type",
+                            profile.memberType),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.person,
+                            "Gender",
+                            profile.gender),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.bloodtype,
+                            "Blood Group",
+                            profile.bloodGroup),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.cake,
+                            "DOB",
+                            profile.dateOfBirth),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.location_on,
+                            "Address",
+                            profile.presentAddress),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.business,
+                            "Organization",
+                            profile.organizationName),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.category,
+                            "Org Type",
+                            profile.organizationType),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.person_outline,
+                            "Owner",
+                            profile.organizationOwner),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.location_city,
+                            "Org Address",
+                            profile.organizationAddress),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.call,
+                            "Org Phone",
+                            profile.organizationPhone),
+
+                        _divider(),
+
+                        _profileRow(
+                            Icons.calendar_today,
+                            "Start Date",
+                            profile.startDate),
+
+                        _divider(),
+
+                        _profileRow(
+                          Icons.fingerprint,
+                          "Biometric",
                           profile
-                              .organizationName,
+                                  .isBiometricEnabled
+                              ? "Enabled"
+                              : "Disabled",
+                        ),
+
+                        _divider(),
+
+                        _profileRow(
+                          Icons.check_circle,
+                          "Status",
+                          profile.isActive
+                              ? "Active"
+                              : "Inactive",
                         ),
                       ],
                     ),
@@ -247,34 +281,52 @@ class _ProfileScreenState
     );
   }
 
+  Widget _divider() {
+    return const Divider();
+  }
+
   Widget _profileRow(
-    BuildContext context,
     IconData icon,
     String label,
     String value,
   ) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color:
-              AppStyle.primaryColor,
-        ),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment:
-              CrossAxisAlignment
-                  .start,
-          children: [
-            Text(
-              label,
+    return Padding(
+      padding:
+          const EdgeInsets.symmetric(
+        vertical: 8,
+      ),
+      child: Row(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            color:
+                AppStyle.primaryColor,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment
+                      .start,
+              children: [
+                Text(
+                  label,
+                  style:
+                      const TextStyle(
+                    fontWeight:
+                        FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(
+                    height: 4),
+                Text(value),
+              ],
             ),
-            Text(
-              value,
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

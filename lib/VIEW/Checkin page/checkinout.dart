@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
@@ -10,200 +11,286 @@ import 'package:offixo/VIEW/Verification%20page/verification_screen.dart';
 import 'package:provider/provider.dart';
 
 class CheckinScreen extends StatefulWidget {
-  const CheckinScreen({super.key});
+  const CheckinScreen({
+    super.key,
+  });
 
   @override
-  State<CheckinScreen> createState() => _CheckinScreenState();
+  State<CheckinScreen>
+      createState() =>
+          _CheckinScreenState();
 }
 
-class _CheckinScreenState extends State<CheckinScreen> {
-  CheckStatus _checkStatus = CheckStatus.checkedOut;
+class _CheckinScreenState
+    extends State<
+      CheckinScreen
+    > {
+  CheckStatus _checkStatus =
+      CheckStatus.checkedOut;
 
-  LocationStatus _locationStatus = LocationStatus.withinPremises;
-
-  DateTime? _checkInTime;
-  DateTime? _checkOutTime;
+  LocationStatus
+  _locationStatus =
+      LocationStatus
+          .withinPremises;
 
   @override
   void initState() {
     super.initState();
 
     Future.microtask(() {
-      context.read<ProfileProvider>().fetchProfile();
+      context
+          .read<
+            ProfileProvider
+          >()
+          .fetchProfile();
     });
   }
 
-  // ───────────────── TIME HELPERS ─────────────────
+  Future<void>
+  _onRefresh() async {
+    await Future.delayed(
+      const Duration(
+        seconds: 1,
+      ),
+    );
 
-  String get _checkInDisplay {
-    if (_checkInTime == null) return '--:--';
-    return _formatHHMM(_checkInTime!);
-  }
+    await context
+        .read<
+          ProfileProvider
+        >()
+        .fetchProfile();
 
-  String get _checkOutDisplay {
-    if (_checkOutTime == null) return '--:--';
-    return _formatHHMM(_checkOutTime!);
-  }
-
-  String get _totalHoursDisplay {
-    if (_checkInTime == null) return '00:00';
-
-    final end = _checkOutTime ?? DateTime.now();
-    final diff = end.difference(_checkInTime!);
-
-    final h = diff.inHours.toString().padLeft(2, '0');
-    final m = (diff.inMinutes % 60).toString().padLeft(2, '0');
-
-    return '$h:$m';
-  }
-
-  String _formatHHMM(DateTime dt) {
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    return '$h:$m';
-  }
-
-  Future<void> _onRefresh() async {
-    await Future.delayed(const Duration(seconds: 1));
-    await context.read<ProfileProvider>().fetchProfile();
     setState(() {});
   }
 
-  // ───────────────── BUTTON ACTION ─────────────────
-
-  void _handleButtonTap() {
-    /// FAILED CHECK-IN (OUTSIDE AREA)
-    if (_checkStatus == CheckStatus.checkedOut &&
-        _locationStatus == LocationStatus.outsidePremises) {
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          opaque: false,
-          barrierColor: Colors.black.withOpacity(0.75),
-          barrierDismissible: true,
-          pageBuilder: (_, __, ___) => const VerificationScreen(
-            isSuccess: false,
-            title: 'Check-in Failed ❌',
-            message: 'You are outside the authorized area',
-            successMessage: '', // not used
-          ),
-        ),
-      );
-      return;
-    }
-
+  Future<void>
+  _handleButtonTap() async {
     /// CHECK IN
-    if (_checkStatus == CheckStatus.checkedOut) {
-      setState(() {
-        _checkInTime = DateTime.now();
-        _checkOutTime = null;
-        _checkStatus = CheckStatus.checkedIn;
-      });
+    if (_checkStatus ==
+        CheckStatus
+            .checkedOut) {
+      final result =
+          await Navigator.of(
+            context,
+          ).push<bool>(
+            PageRouteBuilder(
+              opaque: false,
+              barrierColor:
+                  Colors.black
+                      .withOpacity(
+                        0.75,
+                      ),
 
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          opaque: false,
-          barrierColor: Colors.black.withOpacity(0.75),
-          barrierDismissible: true,
-          pageBuilder: (_, __, ___) => const VerificationScreen(
-            isSuccess: true,
-            title: 'Success 🎉',
-            message: 'Verifying check-in...',
-            successMessage: "You're checked in successfully.",
-          ),
-        ),
-      );
+              barrierDismissible:
+                  true,
+
+              pageBuilder:
+                  (
+                    _,
+                    __,
+                    ___,
+                  ) =>
+                      const VerificationScreen(),
+            ),
+          );
+
+      /// SUCCESS CHECKIN
+      if (result == true &&
+          mounted) {
+        setState(() {
+          _checkStatus =
+              CheckStatus
+                  .checkedIn;
+        });
+      }
     }
 
     /// CHECK OUT
     else {
-      setState(() {
-        _checkOutTime = DateTime.now();
-        _checkStatus = CheckStatus.checkedOut;
-      });
+      final result =
+          await Navigator.of(
+            context,
+          ).push<bool>(
+            PageRouteBuilder(
+              opaque: false,
+              barrierColor:
+                  Colors.black
+                      .withOpacity(
+                        0.75,
+                      ),
 
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          opaque: false,
-          barrierColor: Colors.black.withOpacity(0.75),
-          barrierDismissible: true,
-          pageBuilder: (_, __, ___) => const VerificationScreen(
-            isSuccess: true,
-            title: 'Success 🎉',
-            message: 'Verifying check-out...',
-            successMessage: "You're checked out successfully.",
+              barrierDismissible:
+                  true,
+
+              pageBuilder:
+                  (
+                    _,
+                    __,
+                    ___,
+                  ) =>
+                      const VerificationScreen(
+                        isCheckout:
+                            true,
+                      ),
+            ),
+          );
+
+      /// SUCCESS CHECKOUT
+      if (result == true &&
+          mounted) {
+        setState(() {
+          _checkStatus =
+              CheckStatus
+                  .checkedOut;
+        });
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Check-out successful',
+            ),
+            duration: Duration(
+              seconds: 2,
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 
-  // ───────────────── UI ─────────────────
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Scaffold(
-      backgroundColor: AppStyle.backgroundColor,
+      backgroundColor:
+          AppStyle
+              .backgroundColor,
 
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: _onRefresh,
+        child:
+            RefreshIndicator(
+              onRefresh:
+                  _onRefresh,
 
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+              child:
+                  SingleChildScrollView(
+                    physics:
+                        const AlwaysScrollableScrollPhysics(),
 
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppStyle.responsiveWidth(context, 20),
-                vertical: AppStyle.responsiveHeight(context, 35),
-              ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(
+                            horizontal:
+                                AppStyle.responsiveWidth(
+                                  context,
+                                  20,
+                                ),
+                            vertical:
+                                AppStyle.responsiveHeight(
+                                  context,
+                                  35,
+                                ),
+                          ),
 
-              child: Column(
-                children: [
-                  /// HEADER
-                  Consumer<ProfileProvider>(
-                    builder: (context, provider, child) {
-                      final profile = provider.profile;
+                      child:
+                          Column(
+                            children: [
+                              /// HEADER
+                              Consumer<
+                                ProfileProvider
+                              >(
+                                builder:
+                                    (
+                                      context,
+                                      provider,
+                                      child,
+                                    ) {
+                                  final profile =
+                                      provider.profile;
 
-                      return Header(
-                        userName: profile?.fullName ?? "Loading...",
-                        avatarUrl: profile?.faceImage,
-                      );
-                    },
-                  ),
+                                  return Header(
+                                    userName:
+                                        profile?.fullName ??
+                                        "Loading...",
 
-                  SizedBox(height: AppStyle.responsiveHeight(context, 40)),
+                                    avatarUrl:
+                                        profile?.faceImage,
+                                  );
+                                },
+                              ),
 
-                  const LiveClockWidget(),
+                              SizedBox(
+                                height:
+                                    AppStyle.responsiveHeight(
+                                      context,
+                                      40,
+                                    ),
+                              ),
 
-                  SizedBox(height: AppStyle.responsiveHeight(context, 40)),
+                              const LiveClockWidget(),
 
-                  CheckInButton(
-                    status: _checkStatus,
-                    onTap: _handleButtonTap,
-                  ),
+                              SizedBox(
+                                height:
+                                    AppStyle.responsiveHeight(
+                                      context,
+                                      40,
+                                    ),
+                              ),
 
-                  SizedBox(height: AppStyle.responsiveHeight(context, 30)),
+                              CheckInButton(
+                                status:
+                                    _checkStatus,
 
-                  LocationBadge(
-                    locationStatus: _locationStatus,
-                    locationName: 'Techfifo Innovations, Palakkad',
-                  ),
+                                onTap:
+                                    _handleButtonTap,
+                              ),
 
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: AppStyle.responsiveHeight(context, 40),
+                              SizedBox(
+                                height:
+                                    AppStyle.responsiveHeight(
+                                      context,
+                                      30,
+                                    ),
+                              ),
+
+                              LocationBadge(
+                                locationStatus:
+                                    _locationStatus,
+
+                                locationName:
+                                    'Techfifo Innovations, Palakkad',
+                              ),
+
+                              Container(
+                                padding:
+                                    EdgeInsets.symmetric(
+                                      vertical:
+                                          AppStyle.responsiveHeight(
+                                            context,
+                                            40,
+                                          ),
+                                    ),
+
+                                child:
+                                    const AttendanceStatsRow(
+                                      checkInTime:
+                                          '--:--',
+
+                                      totalHours:
+                                          '00:00',
+
+                                      checkOutTime:
+                                          '--:--',
+                                    ),
+                              ),
+                            ],
+                          ),
                     ),
-                    child: AttendanceStatsRow(
-                      checkInTime: _checkInDisplay,
-                      totalHours: _totalHoursDisplay,
-                      checkOutTime: _checkOutDisplay,
-                    ),
                   ),
-                ],
-              ),
             ),
-          ),
-        ),
       ),
     );
   }

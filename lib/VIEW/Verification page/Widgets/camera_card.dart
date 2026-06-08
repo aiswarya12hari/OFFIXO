@@ -5,7 +5,12 @@ import 'package:flutter/material.dart';
 
 class CameraCard extends StatelessWidget {
   final CameraController? controller;
-  final bool isSuccess;
+
+  /// null = not verified yet
+  /// true = success
+  /// false = failed
+  final bool? isSuccess;
+
   final File? capturedImage;
 
   const CameraCard({
@@ -17,35 +22,56 @@ class CameraCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color borderColor;
+
+    /// Neutral border before verification
+    if (isSuccess == null) {
+      borderColor = Colors.white24;
+    }
+
+    /// Success
+    else if (isSuccess == true) {
+      borderColor = const Color(0xFF22C55E);
+    }
+
+    /// Failure
+    else {
+      borderColor = const Color(0xFFEF4444);
+    }
+
     return Container(
       height: 406,
       width: 292,
-
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(23),
         border: Border.all(
-          color: isSuccess
-              ? const Color(0xFF22C55E)
-              : const Color(0xFFEF4444),
+          color: borderColor,
           width: 3,
         ),
       ),
-
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-
         child: capturedImage != null
-            ? Image.file(
-                capturedImage!,
-                fit: BoxFit.cover,
+
+            /// Captured selfie → flip once
+            ? Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()..rotateY(3.14159),
+                child: Image.file(
+                  capturedImage!,
+                  fit: BoxFit.cover,
+                ),
               )
-            : controller == null || !controller!.value.isInitialized
-                ? const Center(child: CircularProgressIndicator())
-                : Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()..scale(-1.0, 1.0),
-                    child: CameraPreview(controller!),
-                  ),
+
+            /// Loading
+            : controller == null ||
+                    !controller!.value.isInitialized
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+
+                /// Live camera preview → NO flip
+                : CameraPreview(controller!),
       ),
     );
   }
