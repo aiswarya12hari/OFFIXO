@@ -20,4 +20,5 @@ class ApiConfig {
   static String get checkOutUrl {
     return '$baseUrl/api/attendance/checkout/';
   }
+  
 }

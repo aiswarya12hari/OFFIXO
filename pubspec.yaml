@@ -44,6 +44,7 @@ dependencies:
   shared_preferences: ^2.5.5
   geolocator: ^14.0.2
   flutter_launcher_icons: ^0.14.4
+  
 
 dev_dependencies:
   flutter_test:
@@ -104,3 +105,5 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icon/Offixo Logo User.jpg.jpeg"
+
+

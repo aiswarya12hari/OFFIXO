@@ -5,9 +5,10 @@ import 'package:offixo/PROVIDER/Login%20Page/login_provider.dart';
 import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
 import 'package:offixo/PROVIDER/Verification%20Page/checkin_provider.dart';
 import 'package:offixo/PROVIDER/Verification%20Page/checkout_provider.dart';
+import 'package:offixo/VIEW/Splash%20Page/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:offixo/VIEW/Login%20page/login_screen.dart';
-import 'package:offixo/VIEW/Onboarding%20page/onboarding_screen.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +33,8 @@ class OffixoApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: OnboardingScreen(),
+        // home: OnboardingScreen(),
+        home: const SplashScreen(),
         routes: {'/login': (context) => LoginScreen()},
       ),
     );
