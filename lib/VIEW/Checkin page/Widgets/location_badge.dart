@@ -13,7 +13,7 @@ class LocationBadge extends StatelessWidget {
   const LocationBadge({
     super.key,
     required this.locationStatus,
-    this.locationName = 'Techfifo Innovations, Palakkad',
+    required this.locationName,
   });
 
   bool get _isWithin =>
