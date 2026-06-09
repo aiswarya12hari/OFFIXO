@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 
 enum LocationStatus {
@@ -8,12 +8,12 @@ enum LocationStatus {
 
 class LocationBadge extends StatelessWidget {
   final LocationStatus locationStatus;
-  final String locationName;
+  final String locationName; // This will now come from ProfileProvider
 
   const LocationBadge({
     super.key,
     required this.locationStatus,
-    required this.locationName,
+    required this.locationName, // Make it required
   });
 
   bool get _isWithin =>
@@ -66,7 +66,7 @@ class LocationBadge extends StatelessWidget {
 
           Text(
             _isWithin
-                ? locationName
+                ? locationName // Use dynamic location name
                 : 'You are not within the office premises',
 
             style: AppStyle.jakartaText(

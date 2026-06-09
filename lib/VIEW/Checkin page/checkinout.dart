@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';

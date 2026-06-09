@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:offixo/PROVIDER/Checkin%20Page/attendance_status_provider.dart';
 import 'package:offixo/PROVIDER/Login%20Page/login_provider.dart';
 import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
 import 'package:offixo/PROVIDER/Verification%20Page/checkin_provider.dart';
@@ -27,6 +28,7 @@ class OffixoApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => CheckInProvider()),
         ChangeNotifierProvider(create: (_) => CheckOutProvider()),
+        ChangeNotifierProvider(create: (_) => AttendanceStatusProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
