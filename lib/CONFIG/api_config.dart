@@ -27,4 +27,8 @@ class ApiConfig {
 
   static String get leaveRequestUrl =>
       '$baseUrl/api/leave/member/request/';
+
+  static String get todayAttendanceStatusUrl {
+  return '$baseUrl/api/member/attendance/today-status/';
+}
 }
