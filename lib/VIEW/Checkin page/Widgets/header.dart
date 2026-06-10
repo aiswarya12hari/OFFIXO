@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
+import 'package:offixo/PROVIDER/Leave%20Page/leave_provider.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/logout_dialog.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/profile_screen.dart';
+import 'package:offixo/VIEW/Leave%20page/leave_screen.dart';
+import 'package:provider/provider.dart';
 
 class Header extends StatelessWidget {
   final String userName;
@@ -16,51 +19,32 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment:
-          MainAxisAlignment.spaceBetween,
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// LEFT SIDE TEXT
         Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Welcome Back,',
-              style:
-                  AppStyle.jakartaText(
+              style: AppStyle.jakartaText(
                 context: context,
                 size: 14,
-                color:
-                    const Color(
-                  0xFF232323,
-                ),
-                weight:
-                    FontWeight.w400,
+                color: const Color(0xFF232323),
+                weight: FontWeight.w400,
               ),
             ),
-
             SizedBox(
-              height:
-                  AppStyle
-                      .responsiveHeight(
-                context,
-                0,
-              ),
+              height: AppStyle.responsiveHeight(context, 0),
             ),
-
             Text(
               userName,
-              style:
-                  AppStyle.jakartaText(
+              style: AppStyle.jakartaText(
                 context: context,
                 size: 22,
-                color:
-                    AppStyle
-                        .primaryColor,
-                weight:
-                    FontWeight.w600,
+                color: AppStyle.primaryColor,
+                weight: FontWeight.w600,
               ),
             ),
           ],
@@ -69,55 +53,40 @@ class Header extends StatelessWidget {
         /// PROFILE IMAGE + MENU
         PopupMenuButton<String>(
           onSelected: (value) {
-            if (value ==
-                'logout') {
+            if (value == 'logout') {
               showDialog(
                 context: context,
-                builder:
-                    (_) =>
-                        const LogoutDialog(),
+                builder: (_) => const LogoutDialog(),
               );
-            } else if (value ==
-                'profile') {
-              Navigator.of(
-                      context)
-                  .push(
+            } else if (value == 'profile') {
+              Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder:
-                      (_) =>
-                          const ProfileScreen(),
+                  builder: (_) => const ProfileScreen(),
+                ),
+              );
+            } else if (value == 'leave') {
+              context.read<LeaveProvider>().reset();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const LeaveScreen(),
                 ),
               );
             }
           },
-
-          offset:
-              const Offset(
-            0,
-            55,
+          offset: const Offset(0, 55),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-
-          shape:
-              RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(
-              12,
-            ),
-          ),
-
           itemBuilder: (_) => [
             const PopupMenuItem(
-              value:
-                  'profile',
+              value: 'profile',
               child: Row(
                 children: [
                   Icon(
-                    Icons
-                        .person_outline_rounded,
+                    Icons.person_outline_rounded,
                   ),
                   SizedBox(
-                    width:
-                        10,
+                    width: 10,
                   ),
                   Text(
                     'Profile',
@@ -125,104 +94,71 @@ class Header extends StatelessWidget {
                 ],
               ),
             ),
-
             const PopupMenuItem(
-              value:
-                  'logout',
+              value: 'leave',
               child: Row(
                 children: [
                   Icon(
-                    Icons
-                        .logout_rounded,
-                    color:
-                        Color(
-                      0xFFEF4444,
-                    ),
+                    Icons.event_busy_rounded,
                   ),
                   SizedBox(
-                    width:
-                        10,
+                    width: 10,
+                  ),
+                  Text(
+                    'Leave',
+                  ),
+                ],
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'logout',
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.logout_rounded,
+                    color: Color(0xFFEF4444),
+                  ),
+                  SizedBox(
+                    width: 10,
                   ),
                   Text(
                     'Logout',
-                    style:
-                        TextStyle(
-                      color:
-                          Color(
-                        0xFFEF4444,
-                      ),
+                    style: TextStyle(
+                      color: Color(0xFFEF4444),
                     ),
                   ),
                 ],
               ),
             ),
           ],
-
           child: Container(
-            width:
-                AppStyle
-                    .responsiveWidth(
-              context,
-              52,
-            ),
-
-            height:
-                AppStyle
-                    .responsiveWidth(
-              context,
-              52,
-            ),
-
-            decoration:
-                BoxDecoration(
-              shape:
-                  BoxShape.circle,
-              border:
-                  Border.all(
-                color:
-                    const Color(
-                  0xFFD2ECFA,
-                ),
-                width:
-                    1.5,
+            width: AppStyle.responsiveWidth(context, 52),
+            height: AppStyle.responsiveWidth(context, 52),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: const Color(0xFFD2ECFA),
+                width: 1.5,
               ),
             ),
-
-            child:
-                ClipOval(
-              child:
-                  avatarUrl !=
-                              null &&
-                          avatarUrl!
-                              .isNotEmpty
-                      ? Image.network(
-                          avatarUrl!,
-                          fit: BoxFit
-                              .cover,
-                          errorBuilder:
-                              (
-                            context,
-                            error,
-                            stackTrace,
-                          ) {
-                            return Icon(
-                              Icons
-                                  .person,
-                              size:
-                                  28,
-                              color:
-                                  AppStyle.primaryColor,
-                            );
-                          },
-                        )
-                      : Icon(
-                          Icons
-                              .person,
-                          size:
-                              28,
-                          color:
-                              AppStyle.primaryColor,
-                        ),
+            child: ClipOval(
+              child: avatarUrl != null && avatarUrl!.isNotEmpty
+                  ? Image.network(
+                      avatarUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          Icons.person,
+                          size: 28,
+                          color: AppStyle.primaryColor,
+                        );
+                      },
+                    )
+                  : Icon(
+                      Icons.person,
+                      size: 28,
+                      color: AppStyle.primaryColor,
+                    ),
             ),
           ),
         ),

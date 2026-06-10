@@ -20,33 +20,21 @@ class ProfileProvider extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
 
-      /// GET TOKEN
-      String? token =
-          await SharedPreferenceService.getAccessToken();
-
       debugPrint("========== PROFILE API ==========");
-      debugPrint("TOKEN: $token");
       debugPrint(
         "PROFILE URL: ${ApiConfig.memberProfileUrl}",
       );
 
-      /// TOKEN NULL CHECK
-      if (token == null || token.isEmpty) {
-        debugPrint("ACCESS TOKEN IS NULL");
-        _isLoading = false;
-        notifyListeners();
-        return;
-      }
+      /// Get validated auth headers
+      final headers =
+          await SharedPreferenceService.getAuthHeaders();
 
       /// API CALL
       final response = await http.get(
         Uri.parse(
           ApiConfig.memberProfileUrl,
         ),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
+        headers: headers,
       );
 
       debugPrint(
@@ -78,12 +66,13 @@ class ProfileProvider extends ChangeNotifier {
         }
       }
 
-      /// UNAUTHORIZED
-      else if (response.statusCode ==
-          401) {
+      /// SESSION EXPIRED
+      else if (response.statusCode == 401) {
         debugPrint(
-          "401 UNAUTHORIZED - INVALID TOKEN",
+          "SESSION EXPIRED",
         );
+
+        await SharedPreferenceService.clearData();
       }
 
       /// OTHER ERROR
@@ -96,9 +85,19 @@ class ProfileProvider extends ChangeNotifier {
       debugPrint(
         "PROFILE ERROR: $e",
       );
+
+      /// If token validation fails
+      if (e.toString().contains('Session expired')) {
+        await SharedPreferenceService.clearData();
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void clearProfile() {
+    _profile = null;
+    notifyListeners();
   }
 }

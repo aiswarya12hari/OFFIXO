@@ -87,22 +87,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           _isVerifying = false;
         });
       }
-      /// CHECKIN
-      // else {
-      //   final provider = context.read<CheckInProvider>();
-      //   await provider.submitCheckIn(selfie: selfie);
-      //   final isVerified =
-      //       provider.response?.success == true &&
-      //       provider.response?.faceVerified == true &&
-      //       provider.response?.locationVerified == true;
-      //   setState(() {
-      //     _verificationSuccess = provider.isAlreadyCheckedIn
-      //         ? true
-      //         : isVerified;
-      //     _showResult = true;
-      //     _isVerifying = false;
-      //   });
-      // }
+      
       /// CHECKIN
       else {
         final provider = context.read<CheckInProvider>();
@@ -201,28 +186,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   else if (_showResult)
                     Column(
                       children: [
-                        // VerificationMessage(
-                        //   title: _verificationSuccess == true
-                        //       ? 'Success 🎉'
-                        //       : isCheckout
-                        //       ? 'Check-Out Failed ❌'
-                        //       : 'Check-In Failed ❌',
-
-                        //   /// IMPORTANT FIX
-                        //   message: _verificationSuccess == true
-                        //       ? (isCheckout
-                        //             ? (checkOutProvider.response?.message ??
-                        //                   'Check-out successful')
-                        //             : (checkInProvider.response?.message ??
-                        //                   'Check-in successful'))
-                        //       : (isCheckout
-                        //             ? (checkOutProvider.errorMessage.isNotEmpty
-                        //                   ? checkOutProvider.errorMessage
-                        //                   : 'Check-out failed')
-                        //             : (checkInProvider.errorMessage.isNotEmpty
-                        //                   ? checkInProvider.errorMessage
-                        //                   : 'Check-in failed')),
-                        // ),
+                        
                         VerificationMessage(
                           title: isCheckout
                               ? (_verificationSuccess == true

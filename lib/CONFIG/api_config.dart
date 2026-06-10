@@ -21,4 +21,10 @@ class ApiConfig {
     return '$baseUrl/api/attendance/checkout/';
   }
   
+  static String get memberLogoutUrl {
+    return '$baseUrl/api/accounts/member/logout/';
+  }
+
+  static String get leaveRequestUrl =>
+      '$baseUrl/api/leave/member/request/';
 }
