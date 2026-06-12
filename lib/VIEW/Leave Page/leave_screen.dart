@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 import 'package:offixo/MODEL/leave_model.dart';
+import 'package:offixo/PROVIDER/Leave%20Page/leave_balance_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_provider.dart';
 import 'package:offixo/VIEW/Leave%20Page/leave_request_screen.dart';
 import 'package:provider/provider.dart';
@@ -25,9 +26,15 @@ class _LeaveScreenState extends State<LeaveScreen> {
 
   void _openLeaveRequestForm() {
     context.read<LeaveProvider>().resetForm();
+    final balanceProvider = context.read<LeaveBalanceProvider>();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const LeaveRequestScreen()),
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: balanceProvider,
+          child: const LeaveRequestScreen(),
+        ),
+      ),
     );
   }
 
@@ -103,7 +110,7 @@ class _LeaveList extends StatelessWidget {
         bottom: AppStyle.responsiveHeight(context, 100),
       ),
       physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: leaves.length + 1, // +1 for the header summary row
+      itemCount: leaves.length + 1,
       itemBuilder: (context, index) {
         if (index == 0) {
           return Padding(
@@ -184,7 +191,6 @@ class _LeaveCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Top row: leave type + status badge ──────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -223,7 +229,6 @@ class _LeaveCard extends StatelessWidget {
             const Divider(height: 1, color: AppStyle.borderColor),
             const SizedBox(height: 10),
 
-            // ── Date range row ───────────────────────────────────────────
             Row(
               children: [
                 const Icon(Icons.calendar_today_rounded,
@@ -261,7 +266,6 @@ class _LeaveCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // ── Session ──────────────────────────────────────────────────
             Row(
               children: [
                 const Icon(Icons.access_time_rounded,
@@ -280,7 +284,6 @@ class _LeaveCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // ── Reason ───────────────────────────────────────────────────
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -302,7 +305,6 @@ class _LeaveCard extends StatelessWidget {
               ],
             ),
 
-            // ── Rejection reason (if any) ────────────────────────────────
             if (leave.rejectionReason != null &&
                 leave.rejectionReason!.isNotEmpty) ...[
               const SizedBox(height: 8),
@@ -327,7 +329,6 @@ class _LeaveCard extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // ── Applied at ───────────────────────────────────────────────
             Text(
               'Applied: ${_fmtAppliedAt(leave.appliedAt)}',
               style: AppStyle.jakartaText(
@@ -378,7 +379,6 @@ class _LeaveCard extends StatelessWidget {
     }
   }
 
-  // "2026-06-15" → "15 Jun 2026"
   String _fmtDisplay(String date) {
     try {
       final d = DateTime.parse(date);
@@ -392,7 +392,6 @@ class _LeaveCard extends StatelessWidget {
     }
   }
 
-  // ISO timestamp → "09 Jun 2026, 05:18 PM"
   String _fmtAppliedAt(String iso) {
     try {
       final d = DateTime.parse(iso).toLocal();

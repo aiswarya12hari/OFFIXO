@@ -31,4 +31,7 @@ class ApiConfig {
   static String get todayAttendanceStatusUrl {
   return '$baseUrl/api/member/attendance/today-status/';
 }
+
+static String get leaveBalanceUrl =>
+    '$baseUrl/api/leave/member/balances/';
 }
