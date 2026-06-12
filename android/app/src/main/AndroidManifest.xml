@@ -1,7 +1,15 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
 <uses-permission android:name="android.permission.CAMERA"/>
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+ <!-- Remove audio/video permissions added by camera plugin -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
+    <uses-permission android:name="android.permission.RECORD_VIDEO" tools:node="remove" />
+
+    <!-- Mark microphone as not required -->
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
     <application
         android:label="Offixo"
         android:name="${applicationName}"

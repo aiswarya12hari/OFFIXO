@@ -48,10 +48,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _navigateToLogin() {
     Navigator.pushReplacement(
       context,
-      CustomTransitions.heroButtonTransition(
-        page: LoginScreen(),
-        buttonKey: _buttonKey,
-      ),
+      MaterialPageRoute(builder: (context) => LoginScreen()),
     );
   }
 

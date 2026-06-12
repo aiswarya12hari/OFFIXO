@@ -34,6 +34,7 @@ class CheckInProvider extends ChangeNotifier {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
       if (!serviceEnabled) {
+        await Geolocator.openLocationSettings();
         return null;
       }
 
@@ -48,6 +49,7 @@ class CheckInProvider extends ChangeNotifier {
       }
 
       if (permission == LocationPermission.deniedForever) {
+        await Geolocator.openAppSettings();
         return null;
       }
 

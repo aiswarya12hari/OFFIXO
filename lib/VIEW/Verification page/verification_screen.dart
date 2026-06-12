@@ -43,7 +43,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         (camera) => camera.lensDirection == CameraLensDirection.front,
       );
 
-      _controller = CameraController(frontCamera, ResolutionPreset.medium);
+      _controller = CameraController(frontCamera, ResolutionPreset.medium, enableAudio: false,);
 
       await _controller!.initialize();
 

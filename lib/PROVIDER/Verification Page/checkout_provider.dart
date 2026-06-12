@@ -73,6 +73,7 @@ class CheckOutProvider
       if (permission ==
           LocationPermission
               .deniedForever) {
+                await Geolocator.openAppSettings();
         return null;
       }
 
@@ -81,7 +82,8 @@ class CheckOutProvider
         desiredAccuracy:
             LocationAccuracy.high,
       );
-    } catch (_) {
+    } catch (e) {
+      debugPrint('LOCATION ERROR: $e');
       return null;
     }
   }
