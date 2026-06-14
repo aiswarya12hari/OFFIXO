@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:offixo/MODEL/onboarding_model.dart';
 import 'package:offixo/VIEW/Login%20page/login_screen.dart';
 import 'package:offixo/VIEW/Onboarding%20Page/Widgets/bottom_sheet.dart';
-import 'package:offixo/VIEW/Onboarding%20Page/Widgets/custom_transitions.dart';
 import 'package:offixo/VIEW/Onboarding%20Page/Widgets/image_section.dart';
 
 const List<OnboardingModel> _kPages = [
