@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 
-class FooterLinks
-    extends StatelessWidget {
-  const FooterLinks({
-    super.key,
-  });
+class FooterLinks extends StatelessWidget {
+  const FooterLinks({super.key});
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Column(
       children: [
         /// FORGOT PASSWORD
@@ -19,33 +14,21 @@ class FooterLinks
             text: TextSpan(
               children: [
                 TextSpan(
-                  text:
-                      "Forgot Password ? ",
-                  style:
-                      AppStyle.text(
-                    context:
-                        context,
+                  text: "Forgot Password ? ",
+                  style: AppStyle.text(
+                    context: context,
                     size: 14,
-                    color:
-                        AppStyle
-                            .textSecondary,
+                    color: AppStyle.textSecondary,
                   ),
                 ),
 
                 TextSpan(
-                  text:
-                      "Contact Admin",
-                  style:
-                      AppStyle.text(
-                    context:
-                        context,
+                  text: "Contact Admin",
+                  style: AppStyle.text(
+                    context: context,
                     size: 14,
-                    color:
-                        AppStyle
-                            .primaryColor,
-                    weight:
-                        FontWeight
-                            .w700,
+                    color: AppStyle.primaryColor,
+                    weight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -53,81 +36,49 @@ class FooterLinks
           ),
         ),
 
-        SizedBox(
-          height:
-              AppStyle
-                  .responsiveHeight(
-            context,
-            30,
-          ),
-        ),
+        SizedBox(height: AppStyle.responsiveHeight(context, 30)),
 
         /// TERMS & PRIVACY
         Center(
           child: RichText(
-            textAlign:
-                TextAlign.center,
+            textAlign: TextAlign.center,
             text: TextSpan(
               children: [
                 TextSpan(
-                  text:
-                      "By clicking Continue, you agree to our\n",
-                  style:
-                      AppStyle.text(
-                    context:
-                        context,
+                  text: "By clicking Continue, you agree to our\n",
+                  style: AppStyle.text(
+                    context: context,
                     size: 12,
-                    color:
-                        AppStyle
-                            .textSecondary,
+                    color: AppStyle.textSecondary,
                   ),
                 ),
 
                 TextSpan(
-                  text:
-                      "Terms of Service",
-                  style:
-                      AppStyle.text(
-                    context:
-                        context,
+                  text: "Terms of Service",
+                  style: AppStyle.text(
+                    context: context,
                     size: 12,
-                    color:
-                        AppStyle
-                            .primaryColor,
-                    weight:
-                        FontWeight
-                            .w600,
+                    color: AppStyle.primaryColor,
+                    weight: FontWeight.w600,
                   ),
                 ),
 
                 TextSpan(
-                  text:
-                      " and ",
-                  style:
-                      AppStyle.text(
-                    context:
-                        context,
+                  text: " and ",
+                  style: AppStyle.text(
+                    context: context,
                     size: 12,
-                    color:
-                        AppStyle
-                            .textSecondary,
+                    color: AppStyle.textSecondary,
                   ),
                 ),
 
                 TextSpan(
-                  text:
-                      "Privacy Policy",
-                  style:
-                      AppStyle.text(
-                    context:
-                        context,
+                  text: "Privacy Policy",
+                  style: AppStyle.text(
+                    context: context,
                     size: 12,
-                    color:
-                        AppStyle
-                            .primaryColor,
-                    weight:
-                        FontWeight
-                            .w600,
+                    color: AppStyle.primaryColor,
+                    weight: FontWeight.w600,
                   ),
                 ),
               ],

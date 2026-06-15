@@ -43,7 +43,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
         (camera) => camera.lensDirection == CameraLensDirection.front,
       );
 
-      _controller = CameraController(frontCamera, ResolutionPreset.medium, enableAudio: false,);
+      _controller = CameraController(
+        frontCamera,
+        ResolutionPreset.medium,
+        enableAudio: false,
+      );
 
       await _controller!.initialize();
 
@@ -87,7 +91,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
           _isVerifying = false;
         });
       }
-      
       /// CHECKIN
       else {
         final provider = context.read<CheckInProvider>();
@@ -186,7 +189,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   else if (_showResult)
                     Column(
                       children: [
-                        
                         VerificationMessage(
                           title: isCheckout
                               ? (_verificationSuccess == true

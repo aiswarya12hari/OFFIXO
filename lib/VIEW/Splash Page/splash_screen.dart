@@ -9,12 +9,10 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() =>
-      _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState
-    extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -24,9 +22,7 @@ class _SplashScreenState
   Future<void> _initializeApp() async {
     try {
       /// Show splash for minimum 2 seconds
-      await Future.delayed(
-        const Duration(seconds: 2),
-      );
+      await Future.delayed(const Duration(seconds: 2));
 
       /// Check Play Store update
       await AppUpdateService.checkForUpdate();
@@ -34,68 +30,49 @@ class _SplashScreenState
       /// Continue normal app flow
       await _decideRoute();
     } catch (e) {
-      debugPrint(
-        'Splash Error: $e',
-      );
+      debugPrint('Splash Error: $e');
 
       await _decideRoute();
     }
   }
 
   Future<void> _decideRoute() async {
-    final token =
-        await SharedPreferenceService
-            .getAccessToken();
+    final token = await SharedPreferenceService.getAccessToken();
 
     if (!mounted) return;
 
     /// USER ALREADY LOGGED IN
-    if (token != null &&
-        token.isNotEmpty) {
-      final isValid =
-          await SharedPreferenceService
-              .validateAccessToken();
+    if (token != null && token.isNotEmpty) {
+      final isValid = await SharedPreferenceService.validateAccessToken();
 
       if (!mounted) return;
 
       if (isValid) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-            builder: (_) =>
-                const CheckinScreen(),
-          ),
+          MaterialPageRoute(builder: (_) => const CheckinScreen()),
           (route) => false,
         );
       } else {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-            builder: (_) =>
-                const LoginScreen(),
-          ),
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
           (route) => false,
         );
       }
     }
-
     /// FIRST INSTALL / LOGGED OUT USER
     else {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (_) =>
-              const OnboardingScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
         (route) => false,
       );
     }
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

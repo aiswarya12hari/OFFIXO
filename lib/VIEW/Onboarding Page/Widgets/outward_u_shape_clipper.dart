@@ -5,12 +5,7 @@ class OutwardUShapeClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     path.moveTo(0, 40);
-    path.quadraticBezierTo(
-      size.width / 2,
-      120,
-      size.width,
-      40,
-    );
+    path.quadraticBezierTo(size.width / 2, 120, size.width, 40);
     path.lineTo(size.width, size.height);
     path.lineTo(0, size.height);
     path.close();

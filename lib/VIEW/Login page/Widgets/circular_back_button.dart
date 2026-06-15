@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 
 class CircularBackButton extends StatelessWidget {
@@ -8,7 +9,7 @@ class CircularBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);
+        SystemNavigator.pop();
       },
       child: Container(
         height: 52,

@@ -18,157 +18,88 @@ class CustomTextField extends StatefulWidget {
   });
 
   @override
-  State<CustomTextField> createState() =>
-      _CustomTextFieldState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
-class _CustomTextFieldState
-    extends State<CustomTextField> {
+class _CustomTextFieldState extends State<CustomTextField> {
   late bool _isObscured;
 
   @override
   void initState() {
     super.initState();
-    _isObscured =
-        widget.isPassword;
+    _isObscured = widget.isPassword;
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     return TextFormField(
-      controller:
-          widget.controller,
+      controller: widget.controller,
 
-      obscureText:
-          _isObscured,
+      obscureText: _isObscured,
 
-      validator:
-          widget.validator,
+      validator: widget.validator,
 
-      autovalidateMode:
-          AutovalidateMode
-              .onUserInteraction,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
 
-      style:
-          AppStyle.text(
-        context: context,
-        size: 15,
-      ),
+      style: AppStyle.text(context: context, size: 15),
 
-      textInputAction:
-          widget.isPassword
-              ? TextInputAction
-                  .done
-              : TextInputAction
-                  .next,
+      textInputAction: widget.isPassword
+          ? TextInputAction.done
+          : TextInputAction.next,
 
-      decoration:
-          InputDecoration(
-        hintText:
-            widget.hintText,
+      decoration: InputDecoration(
+        hintText: widget.hintText,
 
-        hintStyle:
-            AppStyle.text(
-          context:
-              context,
+        hintStyle: AppStyle.text(
+          context: context,
           size: 14,
-          color: AppStyle
-              .textSecondary,
+          color: AppStyle.textSecondary,
         ),
 
-        prefixIcon: Icon(
-          widget.icon,
-          color:
-              AppStyle
-                  .primaryColor,
-          size: 22,
-        ),
+        prefixIcon: Icon(widget.icon, color: AppStyle.primaryColor, size: 22),
 
-        suffixIcon:
-            widget.isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isObscured
-                          ? Icons
-                              .visibility_off_outlined
-                          : Icons
-                              .visibility_outlined,
-                      color:
-                          AppStyle.primaryColor,
-                    ),
-                    onPressed:
-                        () {
-                      setState(
-                        () {
-                          _isObscured =
-                              !_isObscured;
-                        },
-                      );
-                    },
-                  )
-                : null,
+        suffixIcon: widget.isPassword
+            ? IconButton(
+                icon: Icon(
+                  _isObscured
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: AppStyle.primaryColor,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isObscured = !_isObscured;
+                  });
+                },
+              )
+            : null,
 
         filled: true,
-        fillColor:
-            Colors.white,
+        fillColor: Colors.white,
 
-        contentPadding:
-            const EdgeInsets.symmetric(
-          vertical: 18,
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppStyle.borderColor),
         ),
 
-        enabledBorder:
-            OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(
-            16,
-          ),
-          borderSide:
-              const BorderSide(
-            color: AppStyle
-                .borderColor,
-          ),
-        ),
-
-        focusedBorder:
-            OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(
-            16,
-          ),
-          borderSide:
-              const BorderSide(
-            color: AppStyle
-                .primaryColor,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(
+            color: AppStyle.primaryColor,
             width: 1.5,
           ),
         ),
 
-        errorBorder:
-            OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(
-            16,
-          ),
-          borderSide:
-              const BorderSide(
-            color: Colors.red,
-          ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.red),
         ),
 
-        focusedErrorBorder:
-            OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(
-            16,
-          ),
-          borderSide:
-              const BorderSide(
-            color: Colors.red,
-            width: 1.5,
-          ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
         ),
       ),
     );

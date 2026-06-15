@@ -11,7 +11,6 @@ import 'package:offixo/VIEW/Splash%20Page/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:offixo/VIEW/Login%20page/login_screen.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

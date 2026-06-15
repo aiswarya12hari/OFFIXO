@@ -91,19 +91,19 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
       return;
     }
     if (_reasonController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a reason')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter a reason')));
       return;
     }
 
     await context.read<LeaveProvider>().submitLeaveRequest(
-          leaveType: _selectedLeaveType,
-          fromDate: _formatDate(_fromDate!),
-          toDate: _formatDate(_toDate!),
-          session: _selectedSession,
-          reason: _reasonController.text.trim(),
-        );
+      leaveType: _selectedLeaveType,
+      fromDate: _formatDate(_fromDate!),
+      toDate: _formatDate(_toDate!),
+      session: _selectedSession,
+      reason: _reasonController.text.trim(),
+    );
 
     if (!mounted) return;
 
@@ -136,8 +136,11 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                 color: Color(0xFFE8F5E9),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_circle_rounded,
-                  color: Color(0xFF4CAF50), size: 36),
+              child: const Icon(
+                Icons.check_circle_rounded,
+                color: Color(0xFF4CAF50),
+                size: 36,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -171,7 +174,8 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
               style: TextButton.styleFrom(
                 backgroundColor: AppStyle.primaryColor,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               child: Text(
@@ -205,8 +209,11 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: AppStyle.textPrimary, size: 18),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppStyle.textPrimary,
+            size: 18,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -349,10 +356,11 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                       onPressed: provider.isLoading ? null : _submit,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppStyle.primaryColor,
-                        disabledBackgroundColor:
-                            AppStyle.primaryColor.withOpacity(0.6),
+                        disabledBackgroundColor: AppStyle.primaryColor
+                            .withOpacity(0.6),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         elevation: 0,
                       ),
                       child: provider.isLoading
@@ -413,8 +421,9 @@ class _LeaveBalanceRow extends StatelessWidget {
               final i = entry.key;
               final b = entry.value;
               return Padding(
-                padding:
-                    EdgeInsets.only(right: i < balances.length - 1 ? 10 : 0),
+                padding: EdgeInsets.only(
+                  right: i < balances.length - 1 ? 10 : 0,
+                ),
                 child: _LeaveBalanceChip(balance: b),
               );
             }).toList(),
@@ -571,8 +580,7 @@ class _LeaveTypeSelector extends StatelessWidget {
               ),
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color:
-                    isSelected ? AppStyle.primaryColor : AppStyle.whiteColor,
+                color: isSelected ? AppStyle.primaryColor : AppStyle.whiteColor,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: isSelected
@@ -626,17 +634,21 @@ class _SessionDropdown extends StatelessWidget {
         child: DropdownButton<String>(
           value: selected,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded,
-              color: AppStyle.textSecondary),
+          icon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: AppStyle.textSecondary,
+          ),
           style: AppStyle.jakartaText(context: context, size: 13),
           onChanged: (val) {
             if (val != null) onChanged(val);
           },
           items: sessions
-              .map((s) => DropdownMenuItem(
-                    value: s['value'],
-                    child: Text(s['label']!),
-                  ))
+              .map(
+                (s) => DropdownMenuItem(
+                  value: s['value'],
+                  child: Text(s['label']!),
+                ),
+              )
               .toList(),
         ),
       ),
@@ -664,8 +676,11 @@ class _DatePickerField extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_today_rounded,
-                size: 16, color: AppStyle.primaryColor),
+            const Icon(
+              Icons.calendar_today_rounded,
+              size: 16,
+              color: AppStyle.primaryColor,
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -676,9 +691,7 @@ class _DatePickerField extends StatelessWidget {
                   color: isPlaceholder
                       ? AppStyle.textSecondary
                       : AppStyle.textPrimary,
-                  weight: isPlaceholder
-                      ? FontWeight.w400
-                      : FontWeight.w600,
+                  weight: isPlaceholder ? FontWeight.w400 : FontWeight.w600,
                 ),
               ),
             ),

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 
@@ -46,5 +44,3 @@ class VerificationMessage extends StatelessWidget {
     );
   }
 }
-
-

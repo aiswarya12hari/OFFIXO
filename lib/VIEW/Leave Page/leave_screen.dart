@@ -47,8 +47,11 @@ class _LeaveScreenState extends State<LeaveScreen> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: AppStyle.textPrimary, size: 18),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppStyle.textPrimary,
+            size: 18,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -131,7 +134,9 @@ class _LeaveList extends StatelessWidget {
                   onTap: onApply,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 8),
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: AppStyle.primaryColor,
                       borderRadius: BorderRadius.circular(20),
@@ -139,8 +144,11 @@ class _LeaveList extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.add_rounded,
-                            color: Colors.white, size: 16),
+                        const Icon(
+                          Icons.add_rounded,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           'Leave Request',
@@ -207,7 +215,9 @@ class _LeaveCard extends StatelessWidget {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: statusBg,
                     borderRadius: BorderRadius.circular(20),
@@ -231,8 +241,11 @@ class _LeaveCard extends StatelessWidget {
 
             Row(
               children: [
-                const Icon(Icons.calendar_today_rounded,
-                    size: 14, color: AppStyle.primaryColor),
+                const Icon(
+                  Icons.calendar_today_rounded,
+                  size: 14,
+                  color: AppStyle.primaryColor,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   '${_fmtDisplay(leave.fromDate)}  →  ${_fmtDisplay(leave.toDate)}',
@@ -246,7 +259,9 @@ class _LeaveCard extends StatelessWidget {
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 3),
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: AppStyle.backgroundColor,
                     borderRadius: BorderRadius.circular(6),
@@ -268,8 +283,11 @@ class _LeaveCard extends StatelessWidget {
 
             Row(
               children: [
-                const Icon(Icons.access_time_rounded,
-                    size: 14, color: AppStyle.textSecondary),
+                const Icon(
+                  Icons.access_time_rounded,
+                  size: 14,
+                  color: AppStyle.textSecondary,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   _sessionLabel(leave.session),
@@ -287,8 +305,11 @@ class _LeaveCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.notes_rounded,
-                    size: 14, color: AppStyle.textSecondary),
+                const Icon(
+                  Icons.notes_rounded,
+                  size: 14,
+                  color: AppStyle.textSecondary,
+                ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -383,8 +404,19 @@ class _LeaveCard extends StatelessWidget {
     try {
       final d = DateTime.parse(date);
       const months = [
-        '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        '',
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
       ];
       return '${d.day.toString().padLeft(2, '0')} ${months[d.month]} ${d.year}';
     } catch (_) {
@@ -396,8 +428,19 @@ class _LeaveCard extends StatelessWidget {
     try {
       final d = DateTime.parse(iso).toLocal();
       const months = [
-        '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        '',
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
       ];
       final hour = d.hour > 12 ? d.hour - 12 : (d.hour == 0 ? 12 : d.hour);
       final amPm = d.hour >= 12 ? 'PM' : 'AM';
@@ -430,8 +473,11 @@ class _EmptyState extends StatelessWidget {
                 color: AppStyle.primaryColor.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.event_busy_rounded,
-                  size: 38, color: AppStyle.primaryColor),
+              child: const Icon(
+                Icons.event_busy_rounded,
+                size: 38,
+                color: AppStyle.primaryColor,
+              ),
             ),
             const SizedBox(height: 20),
             Text(
@@ -461,9 +507,12 @@ class _EmptyState extends StatelessWidget {
                 backgroundColor: AppStyle.primaryColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 24, vertical: 14),
+                  horizontal: 24,
+                  vertical: 14,
+                ),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 elevation: 0,
                 textStyle: AppStyle.jakartaText(
                   context: context,
@@ -494,8 +543,11 @@ class _ErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error_outline_rounded,
-                size: 48, color: Colors.red.shade300),
+            Icon(
+              Icons.error_outline_rounded,
+              size: 48,
+              color: Colors.red.shade300,
+            ),
             const SizedBox(height: 16),
             Text(
               message,

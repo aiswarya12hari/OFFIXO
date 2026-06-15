@@ -26,10 +26,9 @@ class OnboardingPageIndicator extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: currentPage == index
                 ? AppStyle.primaryGradient
-                : LinearGradient(colors: [
-                    Colors.grey.shade400,
-                    Colors.grey.shade400,
-                  ]),
+                : LinearGradient(
+                    colors: [Colors.grey.shade400, Colors.grey.shade400],
+                  ),
             borderRadius: BorderRadius.circular(4),
           ),
         ),

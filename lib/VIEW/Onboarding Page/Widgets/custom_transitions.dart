@@ -32,8 +32,12 @@ class CustomTransitions {
           return _fallbackTransition(animation, child);
         }
         return _buildHeroTransition(
-          context, animation, child,
-          buttonPosition, buttonSize, buttonGradient,
+          context,
+          animation,
+          child,
+          buttonPosition,
+          buttonSize,
+          buttonGradient,
         );
       },
     );
@@ -74,7 +78,8 @@ class CustomTransitions {
         max(
           screenSize.width / buttonSize.width,
           screenSize.height / buttonSize.height,
-        ) * 1.5;
+        ) *
+        1.5;
 
     final scaleAnimation = Tween<double>(
       begin: 1.0,
@@ -102,8 +107,9 @@ class CustomTransitions {
           animation: animation,
           builder: (context, _) {
             return Container(
-              color: buttonGradient.colors.first
-                  .withOpacity(bgFadeAnimation.value),
+              color: buttonGradient.colors.first.withOpacity(
+                bgFadeAnimation.value,
+              ),
             );
           },
         ),
@@ -123,8 +129,7 @@ class CustomTransitions {
                       .animate(
                         CurvedAnimation(
                           parent: animation,
-                          curve: const Interval(
-                              0.7, 1.0, curve: Curves.easeIn),
+                          curve: const Interval(0.7, 1.0, curve: Curves.easeIn),
                         ),
                       )
                       .value,
@@ -139,7 +144,10 @@ class CustomTransitions {
                               CurvedAnimation(
                                 parent: animation,
                                 curve: const Interval(
-                                    0.0, 0.4, curve: Curves.easeInOut),
+                                  0.0,
+                                  0.4,
+                                  curve: Curves.easeInOut,
+                                ),
                               ),
                             )
                             .value,
@@ -182,12 +190,12 @@ class CustomTransitions {
   }
 
   // Fallback transition
-  static Widget _fallbackTransition(
-      Animation<double> animation, Widget child) {
+  static Widget _fallbackTransition(Animation<double> animation, Widget child) {
     return FadeTransition(
-      opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-      ),
+      opacity: Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
       child: child,
     );
   }
