@@ -5,7 +5,6 @@ import 'package:offixo/VIEW/Onboarding%20Page/Widgets/outward_u_shape_clipper.da
 import 'package:offixo/VIEW/Onboarding%20Page/Widgets/page_indicator.dart';
 import 'package:offixo/VIEW/Onboarding%20Page/Widgets/text_content.dart';
 
-
 class OnboardingBottomSheet extends StatelessWidget {
   const OnboardingBottomSheet({
     super.key,
@@ -22,11 +21,11 @@ class OnboardingBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use MediaQuery to scale bottom padding so it never clips on small screens
     final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return ClipPath(
-      clipper: OutwardUShapeClipper(),
+      clipper: OutwardUShapeClipper(screenHeight: screenHeight),
       child: Container(
         width: double.infinity,
         height: double.infinity,
@@ -34,9 +33,9 @@ class OnboardingBottomSheet extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.fromLTRB(
             32,
-            75, // curve compensation — unchanged
+            75,
             32,
-            bottomPadding > 0 ? bottomPadding + 16 : 28, // safe-area aware
+            bottomPadding > 0 ? bottomPadding + 16 : 28,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 
-/// Gradient CTA button — size (56 h), radius (12), and gradient match original.
-/// [buttonKey] is attached to the outermost SizedBox for hero transition lookup.
 class OnboardingActionButton extends StatelessWidget {
   const OnboardingActionButton({
     super.key,
@@ -17,14 +15,18 @@ class OnboardingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final buttonHeight = AppStyle.responsiveHeight(context, 56);
+    final fontSize = AppStyle.responsiveText(context, 16);
+    final radius = AppStyle.responsiveWidth(context, 12);
+
     return SizedBox(
-      key: buttonKey, // ← only here; never repeated elsewhere
+      key: buttonKey,
       width: double.infinity,
-      height: 56,
+      height: buttonHeight,
       child: Container(
         decoration: BoxDecoration(
           gradient: AppStyle.primaryGradient,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(radius),
         ),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -32,7 +34,7 @@ class OnboardingActionButton extends StatelessWidget {
             shadowColor: Colors.transparent,
             elevation: 0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(radius),
             ),
             animationDuration: const Duration(milliseconds: 200),
           ),
@@ -44,9 +46,9 @@ class OnboardingActionButton extends StatelessWidget {
             child: Text(
               isLastPage ? 'Login to your account' : 'Continue',
               key: ValueKey(isLastPage),
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: fontSize,
                 fontWeight: FontWeight.w600,
               ),
             ),

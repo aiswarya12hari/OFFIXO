@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 import 'package:offixo/MODEL/onboarding_model.dart';
 
-/// Title + description with the exact same slide/fade AnimatedSwitcher
-/// transitions and ShaderMask gradient as the original screen.
 class OnboardingTextContent extends StatelessWidget {
   const OnboardingTextContent({super.key, required this.page});
 
@@ -11,20 +9,22 @@ class OnboardingTextContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final titleSize = AppStyle.responsiveText(context, 25);
+    final descSize = AppStyle.responsiveText(context, 13);
+    final spacing = AppStyle.responsiveHeight(context, 12);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // ── Gradient title — slides in from the RIGHT ─────────────────────
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
           transitionBuilder: (child, animation) => SlideTransition(
-            position:
-                Tween<Offset>(
-                  begin: const Offset(0.5, 0.0),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                ),
+            position: Tween<Offset>(
+              begin: const Offset(0.5, 0.0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeOut),
+            ),
             child: FadeTransition(opacity: animation, child: child),
           ),
           child: ShaderMask(
@@ -36,28 +36,26 @@ class OnboardingTextContent extends StatelessWidget {
               page.title,
               textAlign: TextAlign.center,
               style: AppStyle.textStatic(
-                size: 25,
+                size: titleSize,
                 weight: FontWeight.w700,
                 height: 1.2,
-                color: Colors.white, // ShaderMask overrides the colour
+                color: Colors.white,
               ).copyWith(letterSpacing: 0.14),
             ),
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: spacing),
 
-        // ── Description — slides in from the LEFT ─────────────────────────
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
           transitionBuilder: (child, animation) => SlideTransition(
-            position:
-                Tween<Offset>(
-                  begin: const Offset(-0.5, 0.0),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                ),
+            position: Tween<Offset>(
+              begin: const Offset(-0.5, 0.0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeOut),
+            ),
             child: FadeTransition(opacity: animation, child: child),
           ),
           child: Text(
@@ -65,7 +63,7 @@ class OnboardingTextContent extends StatelessWidget {
             key: ValueKey(page.description),
             textAlign: TextAlign.center,
             style: AppStyle.textStatic(
-              size: 13,
+              size: descSize,
               color: const Color(0xFF9CA3AF),
             ),
           ),
