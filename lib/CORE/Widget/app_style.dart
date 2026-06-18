@@ -84,9 +84,6 @@ class AppStyle {
     );
   }
 
-  // ================= ONBOARDING FONT (MANROPE, NO CONTEXT) =================
-  // Used by onboarding widgets that are stateless and have no BuildContext
-  // available at the point where text style is needed (e.g. inside ShaderMask).
 
   static TextStyle textStatic({
     double size = 14,

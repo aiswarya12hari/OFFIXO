@@ -132,19 +132,34 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final availableHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
     return Scaffold(
       backgroundColor: AppStyle.backgroundColor,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _onRefresh,
-          child: SingleChildScrollView(
+        //   child: SingleChildScrollView(
+        //     physics: const AlwaysScrollableScrollPhysics(),
+            // child: Padding(
+            //   padding: EdgeInsets.symmetric(
+            //     horizontal: AppStyle.responsiveWidth(context, 20),
+            //     vertical: AppStyle.responsiveHeight(context, 35),
+            //   ),
+            child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppStyle.responsiveWidth(context, 20),
-                vertical: AppStyle.responsiveHeight(context, 35),
-              ),
+            slivers: [
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: availableHeight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppStyle.responsiveWidth(context, 20),
+                      vertical: AppStyle.responsiveHeight(context, 24),
+                    ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   /// HEADER
                   Consumer<ProfileProvider>(
@@ -157,15 +172,15 @@ class _CheckinScreenState extends State<CheckinScreen> {
                     },
                   ),
 
-                  SizedBox(height: AppStyle.responsiveHeight(context, 40)),
+                  // SizedBox(height: AppStyle.responsiveHeight(context, 40)),
 
                   const LiveClockWidget(),
 
-                  SizedBox(height: AppStyle.responsiveHeight(context, 40)),
+                  // SizedBox(height: AppStyle.responsiveHeight(context, 40)),
 
                   CheckInButton(status: _checkStatus, onTap: _handleButtonTap),
 
-                  SizedBox(height: AppStyle.responsiveHeight(context, 30)),
+                  // SizedBox(height: AppStyle.responsiveHeight(context, 30)),
 
                   // ✅ Use Consumer to get organization name from ProfileProvider
                   Consumer<ProfileProvider>(
@@ -183,21 +198,38 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
                   Consumer<AttendanceStatusProvider>(
                     builder: (context, attendanceProvider, child) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: AppStyle.responsiveHeight(context, 40),
-                        ),
-                        child: AttendanceStatsRow(
+                      // return Container(
+                      //   padding: EdgeInsets.symmetric(
+                      //     vertical: AppStyle.responsiveHeight(context, 40),
+                      //   ),
+                      //   child: AttendanceStatsRow(
+                      return AttendanceStatsRow(
                           checkInTime: attendanceProvider.checkInTime,
                           totalHours: attendanceProvider.totalHours,
                           checkOutTime: attendanceProvider.checkOutTime,
-                        ),
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
                       );
-                    },
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
