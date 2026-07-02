@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/attendance_status_provider.dart';
+import 'package:offixo/PROVIDER/Checkin%20Page/break_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_balance_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_provider.dart';
 import 'package:offixo/PROVIDER/Login%20Page/login_provider.dart';
@@ -10,6 +11,7 @@ import 'package:offixo/PROVIDER/Verification%20Page/checkout_provider.dart';
 import 'package:offixo/VIEW/Splash%20Page/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:offixo/VIEW/Login%20page/login_screen.dart';
+import 'package:offixo/PROVIDER/Checkin%20Page/delete_account_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +35,8 @@ class OffixoApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AttendanceStatusProvider()),
         ChangeNotifierProvider(create: (_) => LeaveProvider()),
         ChangeNotifierProvider(create: (_) => LeaveBalanceProvider()),
+        ChangeNotifierProvider(create: (_) => DeleteAccountProvider()),
+        ChangeNotifierProvider(create: (_) => BreakProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

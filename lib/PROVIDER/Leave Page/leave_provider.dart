@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:offixo/CONFIG/api_config.dart';
 import 'package:offixo/MODEL/leave_model.dart';
 import 'package:offixo/SERVICES/shared_preference_service.dart';
+import 'package:offixo/MODEL/leave_type_model.dart';
 
 class LeaveProvider extends ChangeNotifier {
   // ── GET state ──────────────────────────────────────────────────────────────
@@ -14,6 +15,12 @@ class LeaveProvider extends ChangeNotifier {
   bool get isFetching => _isFetching;
   List<LeaveModel> get leaves => _leaves;
   String? get fetchError => _fetchError;
+
+  List<LeaveTypeModel> _leaveTypes = [];
+  bool _isLeaveTypesLoading = false;
+
+  List<LeaveTypeModel> get leaveTypes => _leaveTypes;
+  bool get isLeaveTypesLoading => _isLeaveTypesLoading;
 
   // ── POST state ─────────────────────────────────────────────────────────────
   bool _isLoading = false;
@@ -45,8 +52,9 @@ class LeaveProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final List<dynamic> list =
-            data is List ? data : (data['results'] ?? []);
+        final List<dynamic> list = data is List
+            ? data
+            : (data['results'] ?? []);
         _leaves = list.map((e) => LeaveModel.fromJson(e)).toList();
       } else {
         _fetchError = 'Failed to load leave history';
@@ -57,6 +65,33 @@ class LeaveProvider extends ChangeNotifier {
     }
 
     _isFetching = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchLeaveTypes() async {
+    _isLeaveTypesLoading = true;
+    notifyListeners();
+
+    try {
+      final headers = await SharedPreferenceService.getAuthHeaders();
+
+      final response = await http.get(
+        Uri.parse(ApiConfig.leaveTypesDropdownUrl),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        final List<dynamic> list = data['leave_types'] ?? [];
+
+        _leaveTypes = list.map((e) => LeaveTypeModel.fromJson(e)).toList();
+      }
+    } catch (e) {
+      debugPrint('LEAVE TYPES ERROR: $e');
+    }
+
+    _isLeaveTypesLoading = false;
     notifyListeners();
   }
 

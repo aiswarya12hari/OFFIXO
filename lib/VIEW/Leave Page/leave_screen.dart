@@ -110,7 +110,7 @@ class _LeaveList extends StatelessWidget {
         left: AppStyle.responsiveWidth(context, 20),
         right: AppStyle.responsiveWidth(context, 20),
         top: AppStyle.responsiveHeight(context, 20),
-        bottom: AppStyle.responsiveHeight(context, 100),
+        bottom: AppStyle.responsiveHeight(context, 20),
       ),
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: leaves.length + 1,

@@ -34,4 +34,15 @@ class ApiConfig {
 
 static String get leaveBalanceUrl =>
     '$baseUrl/api/leave/member/balances/';
+
+  static String get deleteAccountUrl {
+  return '$baseUrl/api/accounts/member/delete-account/';
+}
+
+static String get memberBreakUrl {
+  return '$baseUrl/api/attendance/member-break/';
+}
+
+static String get leaveTypesDropdownUrl =>
+    '$baseUrl/api/leave/types/dropdown/';
 }

@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
+import 'package:offixo/PROVIDER/Checkin%20Page/break_provider.dart';
 import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
 import 'package:offixo/PROVIDER/Verification%20Page/checkin_provider.dart';
 import 'package:offixo/PROVIDER/Verification%20Page/checkout_provider.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/attendance_stats_row.dart';
+import 'package:offixo/VIEW/Checkin%20page/Widgets/break_button.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/check_in_button.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/header.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/live_clock_widget.dart';
@@ -27,26 +30,58 @@ class _CheckinScreenState extends State<CheckinScreen> {
   void initState() {
     super.initState();
 
-    // Listen to provider changes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final checkInProvider = context.read<CheckInProvider>();
       final checkOutProvider = context.read<CheckOutProvider>();
 
-      // Add listeners to update button state
       checkInProvider.addListener(_onCheckInProviderChanged);
       checkOutProvider.addListener(_onCheckOutProviderChanged);
+      // class _CheckinScreenState extends State<CheckinScreen> {
+      //   CheckStatus _checkStatus = CheckStatus.checkedOut;
+      //   LocationStatus _locationStatus = LocationStatus.withinPremises;
+
+      //   @override
+      //   void initState() {
+      //     super.initState();
+
+      //     // Listen to provider changes
+      //     WidgetsBinding.instance.addPostFrameCallback((_) {
+      //       final checkInProvider = context.read<CheckInProvider>();
+      //       final checkOutProvider = context.read<CheckOutProvider>();
+
+      //       // Add listeners to update button state
+      //       checkInProvider.addListener(_onCheckInProviderChanged);
+      //       checkOutProvider.addListener(_onCheckOutProviderChanged);
     });
 
     Future.microtask(() async {
       await context.read<ProfileProvider>().fetchProfile();
 
       await context.read<AttendanceStatusProvider>().fetchStatus();
+
+      if (mounted) {
+        final isCheckedIn = context
+            .read<AttendanceStatusProvider>()
+            .isCheckedIn;
+        setState(() {
+          _checkStatus = isCheckedIn
+              ? CheckStatus.checkedIn
+              : CheckStatus.checkedOut;
+        });
+      }
     });
   }
 
+  // @override
+  // void dispose() {
+  //   // Remove listeners
+  //   context.read<CheckInProvider>().removeListener(_onCheckInProviderChanged);
+  //   context.read<CheckOutProvider>().removeListener(_onCheckOutProviderChanged);
+  //   super.dispose();
+  // }
+
   @override
   void dispose() {
-    // Remove listeners
     context.read<CheckInProvider>().removeListener(_onCheckInProviderChanged);
     context.read<CheckOutProvider>().removeListener(_onCheckOutProviderChanged);
     super.dispose();
@@ -84,6 +119,15 @@ class _CheckinScreenState extends State<CheckinScreen> {
     await context.read<ProfileProvider>().fetchProfile();
 
     await context.read<AttendanceStatusProvider>().fetchStatus();
+
+    if (mounted) {
+      final isCheckedIn = context.read<AttendanceStatusProvider>().isCheckedIn;
+      setState(() {
+        _checkStatus = isCheckedIn
+            ? CheckStatus.checkedIn
+            : CheckStatus.checkedOut;
+      });
+    }
   }
 
   Future<void> _handleButtonTap() async {
@@ -124,7 +168,9 @@ class _CheckinScreenState extends State<CheckinScreen> {
       if (result == true && mounted) {
         // Reset check-in provider when checking out
         context.read<CheckInProvider>().reset();
-        await context.read<AttendanceStatusProvider>().fetchStatus();
+        context.read<BreakProvider>().resetAll();
+        // await context.read<AttendanceStatusProvider>().fetchStatus();
+        await _onRefresh();
         // Button state will be updated by the listener
       }
     }
@@ -132,7 +178,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight =
+        MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
     return Scaffold(
@@ -140,14 +187,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _onRefresh,
-        //   child: SingleChildScrollView(
-        //     physics: const AlwaysScrollableScrollPhysics(),
-            // child: Padding(
-            //   padding: EdgeInsets.symmetric(
-            //     horizontal: AppStyle.responsiveWidth(context, 20),
-            //     vertical: AppStyle.responsiveHeight(context, 35),
-            //   ),
-            child: CustomScrollView(
+          child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
@@ -158,70 +198,56 @@ class _CheckinScreenState extends State<CheckinScreen> {
                       horizontal: AppStyle.responsiveWidth(context, 20),
                       vertical: AppStyle.responsiveHeight(context, 24),
                     ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  /// HEADER
-                  Consumer<ProfileProvider>(
-                    builder: (context, provider, child) {
-                      final profile = provider.profile;
-                      return Header(
-                        userName: profile?.fullName ?? "Loading...",
-                        avatarUrl: profile?.faceImage,
-                      );
-                    },
-                  ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        /// HEADER
+                        Consumer<ProfileProvider>(
+                          builder: (context, provider, child) {
+                            final profile = provider.profile;
+                            return Header(
+                              userName: profile?.fullName ?? "Loading...",
+                              avatarUrl: profile?.faceImage,
+                            );
+                          },
+                        ),
 
-                  // SizedBox(height: AppStyle.responsiveHeight(context, 40)),
+                        // SizedBox(height: AppStyle.responsiveHeight(context, 40)),
+                        const LiveClockWidget(),
 
-                  const LiveClockWidget(),
+                        // SizedBox(height: AppStyle.responsiveHeight(context, 40)),
+                        CheckInButton(
+                          status: _checkStatus,
+                          onTap: _handleButtonTap,
+                        ),
 
-                  // SizedBox(height: AppStyle.responsiveHeight(context, 40)),
+                        // Show break button only when checked in
+                        if (_checkStatus == CheckStatus.checkedIn)
+                          const BreakButton(),
 
-                  CheckInButton(status: _checkStatus, onTap: _handleButtonTap),
+                        // SizedBox(height: AppStyle.responsiveHeight(context, 30)),
 
-                  // SizedBox(height: AppStyle.responsiveHeight(context, 30)),
+                        // ✅ Use Consumer to get organization name from ProfileProvider
+                        Consumer<ProfileProvider>(
+                          builder: (context, provider, child) {
+                            final organizationName =
+                                provider.profile?.organizationName ??
+                                'Loading...';
+                            return LocationBadge(
+                              locationStatus: _locationStatus,
+                              locationName:
+                                  organizationName, // Pass dynamic organization name
+                            );
+                          },
+                        ),
 
-                  // ✅ Use Consumer to get organization name from ProfileProvider
-                  Consumer<ProfileProvider>(
-                    builder: (context, provider, child) {
-                      final organizationName =
-                          provider.profile?.organizationName ?? 'Loading...';
-
-                      return LocationBadge(
-                        locationStatus: _locationStatus,
-                        locationName:
-                            organizationName, // Pass dynamic organization name
-                      );
-                    },
-                  ),
-
-                  Consumer<AttendanceStatusProvider>(
-                    builder: (context, attendanceProvider, child) {
-                      // return Container(
-                      //   padding: EdgeInsets.symmetric(
-                      //     vertical: AppStyle.responsiveHeight(context, 40),
-                      //   ),
-                      //   child: AttendanceStatsRow(
-                      return AttendanceStatsRow(
-                          checkInTime: attendanceProvider.checkInTime,
-                          totalHours: attendanceProvider.totalHours,
-                          checkOutTime: attendanceProvider.checkOutTime,
-//                         ),
-//                       );
-//                     },
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-                      );
+                        Consumer<AttendanceStatusProvider>(
+                          builder: (context, attendanceProvider, child) {
+                            return AttendanceStatsRow(
+                              checkInTime: attendanceProvider.checkInTime,
+                              totalHours: attendanceProvider.totalHours,
+                              checkOutTime: attendanceProvider.checkOutTime,
+                            );
                           },
                         ),
                       ],
