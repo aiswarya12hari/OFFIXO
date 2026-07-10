@@ -30,7 +30,7 @@ class ActionButtons extends StatelessWidget {
             ),
             onPressed: () {
               if (isSuccess || isAlreadyCheckedIn) {
-                Navigator.pop(context);
+                Navigator.pop(context, true);
               } else {
                 onTryAgain?.call();
               }
