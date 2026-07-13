@@ -1,9 +1,11 @@
 import 'dart:convert';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'
     as http;
 import 'package:offixo/CONFIG/api_config.dart';
+import 'package:offixo/PROVIDER/Checkin%20Page/attendance_status_provider.dart';
+import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
 import 'package:offixo/SERVICES/shared_preference_service.dart';
 import 'package:offixo/VIEW/Checkin%20page/checkinout.dart';
 
@@ -101,6 +103,11 @@ class LoginProvider
         debugPrint(
           "Access Token Saved",
         );
+
+        if (context.mounted) {
+  context.read<ProfileProvider>().clearProfile();
+  context.read<AttendanceStatusProvider>().reset();
+}
 
         Navigator.pushReplacement(
           context,
