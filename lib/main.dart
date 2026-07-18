@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/attendance_status_provider.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/break_provider.dart';
@@ -15,6 +16,11 @@ import 'package:offixo/PROVIDER/Checkin%20Page/delete_account_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   await dotenv.load(fileName: ".env");
 

@@ -1,41 +1,35 @@
 import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart'
-    as http;
+import 'package:http/http.dart' as http;
 import 'package:offixo/CONFIG/api_config.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/attendance_status_provider.dart';
 import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
 import 'package:offixo/SERVICES/shared_preference_service.dart';
 import 'package:offixo/VIEW/Checkin%20page/checkinout.dart';
+import 'dart:io';
 
-class LoginProvider
-    extends ChangeNotifier {
+class LoginProvider extends ChangeNotifier {
   bool _isLoading = false;
 
-  bool get isLoading =>
-      _isLoading;
+  bool get isLoading => _isLoading;
 
   String? _loginError;
 
-  String? get loginError =>
-      _loginError;
+  String? get loginError => _loginError;
 
   void clearError() {
     _loginError = null;
     notifyListeners();
   }
 
-  void _setLoading(
-    bool value,
-  ) {
+  void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
   }
 
   Future<void> login({
-    required BuildContext
-        context,
+    required BuildContext context,
     required String email,
     required String password,
   }) async {
@@ -45,97 +39,59 @@ class LoginProvider
       _loginError = null;
       notifyListeners();
 
-      final response =
-          await http.post(
-        Uri.parse(
-          ApiConfig
-              .memberLoginUrl,
-        ),
-        headers: {
-          "Content-Type":
-              "application/json",
-        },
-        body: jsonEncode({
-          "email":
-              email.trim(),
-          "password":
-              password.trim(),
-        }),
+      final response = await http.post(
+        Uri.parse(ApiConfig.memberLoginUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email.trim(), "password": password.trim()}),
       );
 
-      debugPrint(
-        "Status Code: ${response.statusCode}",
-      );
+      debugPrint("Status Code: ${response.statusCode}");
 
-      debugPrint(
-        "Response Body: ${response.body}",
-      );
+      debugPrint("Response Body: ${response.body}");
 
-      final data =
-          jsonDecode(
-        response.body,
-      );
+      final data = jsonDecode(response.body);
 
       _setLoading(false);
 
-      if (response.statusCode >=
-              200 &&
-          response.statusCode <
-              300) {
-        String accessToken =
-            data["access"] ??
-                "";
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        String accessToken = data["access"] ?? "";
 
-        String refreshToken =
-            data["refresh"] ??
-                "";
+        String refreshToken = data["refresh"] ?? "";
 
-        await SharedPreferenceService
-            .saveAccessToken(
-          accessToken,
-        );
+        await SharedPreferenceService.saveAccessToken(accessToken);
 
-        await SharedPreferenceService
-            .saveRefreshToken(
-          refreshToken,
-        );
+        await SharedPreferenceService.saveRefreshToken(refreshToken);
 
-        debugPrint(
-          "Access Token Saved",
-        );
+        debugPrint("Access Token Saved");
 
         if (context.mounted) {
-  context.read<ProfileProvider>().clearProfile();
-  context.read<AttendanceStatusProvider>().reset();
-}
+          context.read<ProfileProvider>().clearProfile();
+          context.read<AttendanceStatusProvider>().reset();
+        }
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (_) =>
-                const CheckinScreen(),
-          ),
+          MaterialPageRoute(builder: (_) => const CheckinScreen()),
         );
       } else {
-
         // SHOW ERROR BELOW FIELD
         _loginError =
             data["message"] ??
-                data["detail"] ??
-                data["error"] ??
-                "Invalid credentials";
+            data["detail"] ??
+            data["error"] ??
+            "Invalid credentials";
 
         notifyListeners();
       }
     } catch (e) {
       _setLoading(false);
 
-      debugPrint(
-        "Login Error: $e",
-      );
+      debugPrint("Login Error: $e");
 
       _loginError =
-          "Something went wrong";
+          (e is SocketException || e.toString().contains('SocketException'))
+          ? "No internet connection. Please check your network and try again."
+          : "Something went wrong";
 
       notifyListeners();
     }

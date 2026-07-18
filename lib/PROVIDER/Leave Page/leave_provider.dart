@@ -5,7 +5,7 @@ import 'package:offixo/CONFIG/api_config.dart';
 import 'package:offixo/MODEL/leave_model.dart';
 import 'package:offixo/SERVICES/shared_preference_service.dart';
 import 'package:offixo/MODEL/leave_type_model.dart';
-
+import 'dart:io';
 class LeaveProvider extends ChangeNotifier {
   // ── GET state ──────────────────────────────────────────────────────────────
   bool _isFetching = false;
@@ -60,7 +60,11 @@ class LeaveProvider extends ChangeNotifier {
         _fetchError = 'Failed to load leave history';
       }
     } catch (e) {
-      _fetchError = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      if (e is SocketException || e.toString().contains('SocketException')) {
+        _fetchError = 'Please check your network and try again';
+      } else {
+        _fetchError = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      }
       debugPrint('LEAVE FETCH ERROR: $e');
     }
 
