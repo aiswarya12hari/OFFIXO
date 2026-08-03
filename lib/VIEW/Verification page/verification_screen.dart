@@ -904,7 +904,6 @@
 //   }
 // }
 
-
 import 'dart:async';
 import 'dart:io';
 
@@ -953,7 +952,7 @@ class _VerificationScreenState extends State<VerificationScreen>
     _initializeLocationAndCamera();
   }
 
-Future<void> _initializeLocationAndCamera() async {
+  Future<void> _initializeLocationAndCamera() async {
     // Resolve camera permission first so its dialog fully dismisses before
     // location's own permission check (inside _prefetchLocation) runs —
     // requesting both permissions at once caused Android to drop or
@@ -1013,10 +1012,28 @@ Future<void> _initializeLocationAndCamera() async {
       final sw = Stopwatch()..start();
 
       try {
-        final position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.medium,
-          timeLimit: const Duration(seconds: 6),
-        );
+        Position position;
+
+        int retryCount = 0;
+
+        do {
+          position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            timeLimit: const Duration(seconds: 15),
+          );
+
+          debugPrint(
+            '[GPS] Accuracy: ${position.accuracy.toStringAsFixed(1)} meters',
+          );
+
+          if (position.accuracy <= 20) {
+            break;
+          }
+
+          retryCount++;
+
+          await Future.delayed(const Duration(seconds: 2));
+        } while (retryCount < 3);
 
         debugPrint(
           '[TIMING] Location resolved in '
@@ -1024,15 +1041,9 @@ Future<void> _initializeLocationAndCamera() async {
         );
 
         return position;
-      } catch (_) {
-        final position = await Geolocator.getLastKnownPosition();
-
-        debugPrint(
-          '[TIMING] Used last known location in '
-          '${sw.elapsedMilliseconds}ms',
-        );
-
-        return position;
+      } catch (e) {
+        debugPrint('Location Error: $e');
+        return null;
       }
     } catch (e) {
       debugPrint('Location Error: $e');

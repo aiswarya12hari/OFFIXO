@@ -51,14 +51,33 @@ class CheckOutProvider extends ChangeNotifier {
       }
 
       try {
-        return await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.medium,
-          timeLimit: const Duration(seconds: 6),
-        );
-      } catch (_) {
-        /// Fresh fix timed out - fall back to last known position instead
-        /// of blocking check-out entirely.
-        return await Geolocator.getLastKnownPosition();
+        Position position;
+
+        int retryCount = 0;
+
+        do {
+          position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            timeLimit: const Duration(seconds: 15),
+          );
+
+          debugPrint(
+            '[GPS] Accuracy: ${position.accuracy.toStringAsFixed(1)} meters',
+          );
+
+          if (position.accuracy <= 20) {
+            break;
+          }
+
+          retryCount++;
+
+          await Future.delayed(const Duration(seconds: 2));
+        } while (retryCount < 3);
+
+        return position;
+      } catch (e) {
+        debugPrint('LOCATION ERROR: $e');
+        return null;
       }
     } catch (e) {
       debugPrint('LOCATION ERROR: $e');
