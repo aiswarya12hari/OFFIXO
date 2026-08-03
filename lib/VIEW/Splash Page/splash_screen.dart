@@ -88,6 +88,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:offixo/SERVICES/app_update_service.dart';
 import 'package:offixo/SERVICES/shared_preference_service.dart';
 import 'package:offixo/VIEW/Checkin%20page/checkinout.dart';
@@ -103,10 +104,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState() {
-    super.initState();
-    _initializeApp();
-  }
+  @override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    FlutterNativeSplash.remove();
+  });
+  _initializeApp();
+}
 
   Future<void> _initializeApp() async {
     try {

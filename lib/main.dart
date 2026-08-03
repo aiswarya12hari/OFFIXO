@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/attendance_status_provider.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/break_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_balance_provider.dart';
@@ -15,7 +16,8 @@ import 'package:offixo/VIEW/Login%20page/login_screen.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/delete_account_provider.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

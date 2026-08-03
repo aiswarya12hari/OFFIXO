@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 class CameraCard extends StatelessWidget {
   final CameraController? controller;
 
-  /// null = not verified yet
-  /// true = success
-  /// false = failed
   final bool? isSuccess;
 
   final File? capturedImage;
