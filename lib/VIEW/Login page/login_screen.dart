@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // ================= EMAIL FIELD =================
                   CustomTextField(
-                    hintText: "hariharans@gmail.com",
+                    hintText: "Enter your email",
                     controller: emailController,
                     icon: Icons.mail_outline,
 
