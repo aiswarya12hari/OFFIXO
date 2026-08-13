@@ -1,22 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:in_app_update/in_app_update.dart';
-
-// class AppUpdateService {
-//   static Future<void> checkForUpdate() async {
-//     try {
-//       final updateInfo = await InAppUpdate.checkForUpdate();
-
-//       debugPrint("Update Available: ${updateInfo.updateAvailability}");
-
-//       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-//         await InAppUpdate.performImmediateUpdate();
-//       }
-//     } catch (e) {
-//       debugPrint("Update Error: $e");
-//     }
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 
@@ -41,8 +22,7 @@ class AppUpdateService {
       }
 
       // Case 2: New update available — start downloading silently.
-      if (updateInfo.updateAvailability ==
-          UpdateAvailability.updateAvailable) {
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
         if (updateInfo.flexibleUpdateAllowed) {
           await InAppUpdate.startFlexibleUpdate();
           debugPrint("Started silent background download");
