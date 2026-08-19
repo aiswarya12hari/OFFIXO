@@ -59,3 +59,4 @@ class CameraCard extends StatelessWidget {
     );
   }
 }
+

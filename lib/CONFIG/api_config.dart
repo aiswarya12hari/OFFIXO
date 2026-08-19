@@ -20,29 +20,39 @@ class ApiConfig {
   static String get checkOutUrl {
     return '$baseUrl/api/attendance/checkout/';
   }
-  
+
+  static String get locationCheckInUrl {
+    return '$baseUrl/api/attendance/location-checkin/';
+  }
+
+  static String get locationCheckOutUrl {
+    return '$baseUrl/api/attendance/location-checkout/';
+  }
+
   static String get memberLogoutUrl {
     return '$baseUrl/api/accounts/member/logout/';
   }
 
-  static String get leaveRequestUrl =>
-      '$baseUrl/api/leave/member/request/';
+  static String get leaveRequestUrl => '$baseUrl/api/leave/member/request/';
 
   static String get todayAttendanceStatusUrl {
-  return '$baseUrl/api/member/attendance/today-status/';
-}
+    return '$baseUrl/api/member/attendance/today-status/';
+  }
 
-static String get leaveBalanceUrl =>
-    '$baseUrl/api/leave/member/balances/';
+  static String get leaveBalanceUrl => '$baseUrl/api/leave/member/balances/';
 
   static String get deleteAccountUrl {
-  return '$baseUrl/api/accounts/member/delete-account/';
-}
+    return '$baseUrl/api/accounts/member/delete-account/';
+  }
 
-static String get memberBreakUrl {
-  return '$baseUrl/api/attendance/member-break/';
-}
+  static String get memberBreakUrl {
+    return '$baseUrl/api/attendance/member-break/';
+  }
 
-static String get leaveTypesDropdownUrl =>
-    '$baseUrl/api/leave/types/dropdown/';
+  static String get leaveTypesDropdownUrl =>
+      '$baseUrl/api/leave/types/dropdown/';
+
+  static String get attendanceTypeUrl {
+    return '$baseUrl/api/member/attendance-type/';
+  }
 }

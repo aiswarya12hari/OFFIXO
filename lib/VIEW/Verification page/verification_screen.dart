@@ -383,6 +383,7 @@ class _VerificationScreenState extends State<VerificationScreen>
 
     context.read<CheckOutProvider>().reset();
 
+    _locationFuture = _prefetchLocation();
     setState(() {
       _capturedImage = null;
 

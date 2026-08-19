@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/attendance_status_provider.dart';
+import 'package:offixo/PROVIDER/Checkin%20Page/attendance_type_provider.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/break_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_balance_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_provider.dart';
@@ -45,6 +46,7 @@ class OffixoApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LeaveBalanceProvider()),
         ChangeNotifierProvider(create: (_) => DeleteAccountProvider()),
         ChangeNotifierProvider(create: (_) => BreakProvider()),
+        ChangeNotifierProvider(create: (_) => AttendanceTypeProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
