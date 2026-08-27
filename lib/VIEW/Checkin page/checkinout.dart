@@ -1,282 +1,3 @@
-
-
-// import 'dart:async';
-// import 'package:flutter/material.dart';
-// import 'package:offixo/CORE/Widget/app_style.dart';
-// import 'package:offixo/PROVIDER/Checkin%20Page/break_provider.dart';
-// import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
-// import 'package:offixo/PROVIDER/Verification%20Page/checkin_provider.dart';
-// import 'package:offixo/PROVIDER/Verification%20Page/checkout_provider.dart';
-// import 'package:offixo/VIEW/Checkin%20page/Widgets/attendance_stats_row.dart';
-// import 'package:offixo/VIEW/Checkin%20page/Widgets/break_button.dart';
-// import 'package:offixo/VIEW/Checkin%20page/Widgets/check_in_button.dart';
-// import 'package:offixo/VIEW/Checkin%20page/Widgets/header.dart';
-// import 'package:offixo/VIEW/Checkin%20page/Widgets/live_clock_widget.dart';
-// import 'package:offixo/VIEW/Checkin%20page/Widgets/location_badge.dart';
-// import 'package:offixo/VIEW/Verification%20page/verification_screen.dart';
-// import 'package:provider/provider.dart';
-// import 'package:offixo/PROVIDER/Checkin Page/attendance_status_provider.dart';
-// import 'package:shimmer/shimmer.dart';
-
-// class CheckinScreen extends StatefulWidget {
-//   final bool showNetworkError;
-
-//   const CheckinScreen({super.key, this.showNetworkError = false});
-
-//   @override
-//   State<CheckinScreen> createState() => _CheckinScreenState();
-// }
-
-// class _CheckinScreenState extends State<CheckinScreen> {
-//   CheckStatus _checkStatus = CheckStatus.checkedOut;
-//   LocationStatus _locationStatus = LocationStatus.withinPremises;
-//   bool _initialStatusLoading = true;
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     WidgetsBinding.instance.addPostFrameCallback((_) {
-//       final checkInProvider = context.read<CheckInProvider>();
-//       final checkOutProvider = context.read<CheckOutProvider>();
-
-//       checkInProvider.addListener(_onCheckInProviderChanged);
-//       checkOutProvider.addListener(_onCheckOutProviderChanged);
-
-//       /// Show network error banner if splash screen detected no internet
-//       /// while re-validating a saved session.
-//       if (widget.showNetworkError && mounted) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           const SnackBar(
-//             content: Text(
-//               'No internet connection. Some information may be outdated.',
-//             ),
-//             duration: Duration(seconds: 4),
-//             backgroundColor: Colors.redAccent,
-//           ),
-//         );
-//       }
-//     });
-
-//     Future.microtask(() async {
-//       await context.read<ProfileProvider>().fetchProfile();
-
-//       await context.read<AttendanceStatusProvider>().fetchStatus();
-
-//       if (mounted) {
-//         final isCheckedIn = context
-//             .read<AttendanceStatusProvider>()
-//             .isCheckedIn;
-//         setState(() {
-//           _checkStatus = isCheckedIn
-//               ? CheckStatus.checkedIn
-//               : CheckStatus.checkedOut;
-//           _initialStatusLoading = false;
-//         });
-//       }
-//     });
-//   }
-
-//   @override
-//   void dispose() {
-//     context.read<CheckInProvider>().removeListener(_onCheckInProviderChanged);
-//     context.read<CheckOutProvider>().removeListener(_onCheckOutProviderChanged);
-//     super.dispose();
-//   }
-
-//   void _onCheckInProviderChanged() {
-//     final checkInProvider = context.read<CheckInProvider>();
-//     // Update button state on successful check-in
-//     if (checkInProvider.isSuccess && mounted) {
-//       setState(() {
-//         _checkStatus = CheckStatus.checkedIn;
-//       });
-//     }
-//   }
-
-//   void _onCheckOutProviderChanged() {
-//     final checkOutProvider = context.read<CheckOutProvider>();
-//     // Update button state on successful check-out
-//     if (checkOutProvider.isSuccess && mounted) {
-//       setState(() {
-//         _checkStatus = CheckStatus.checkedOut;
-//       });
-
-//       // Show success snackbar
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(
-//           content: Text('Check-out successful'),
-//           duration: Duration(seconds: 2),
-//         ),
-//       );
-//     }
-//   }
-
-//   Future<void> _onRefresh() async {
-//     await context.read<ProfileProvider>().fetchProfile();
-
-//     await context.read<AttendanceStatusProvider>().fetchStatus();
-
-//     if (mounted) {
-//       final isCheckedIn = context.read<AttendanceStatusProvider>().isCheckedIn;
-//       setState(() {
-//         _checkStatus = isCheckedIn
-//             ? CheckStatus.checkedIn
-//             : CheckStatus.checkedOut;
-//       });
-//     }
-//   }
-
-//   Future<void> _handleButtonTap() async {
-//     /// CHECK IN
-//     if (_checkStatus == CheckStatus.checkedOut) {
-//       final result = await Navigator.of(context).push<bool>(
-//         PageRouteBuilder(
-//           opaque: false,
-//           barrierColor: Colors.black.withOpacity(0.75),
-//           barrierDismissible: true,
-//           pageBuilder: (_, __, ___) => const VerificationScreen(),
-//         ),
-//       );
-
-//       /// SUCCESS CHECKIN
-//       if (result == true && mounted) {
-//         // Reset checkout provider when checking in
-//         context.read<CheckOutProvider>().reset();
-//         setState(() {
-//           _checkStatus = CheckStatus.checkedIn;
-//         });
-//         await context.read<AttendanceStatusProvider>().fetchStatus();
-//       }
-//     }
-//     /// CHECK OUT
-//     else {
-//       final result = await Navigator.of(context).push<bool>(
-//         PageRouteBuilder(
-//           opaque: false,
-//           barrierColor: Colors.black.withOpacity(0.75),
-//           barrierDismissible: true,
-//           pageBuilder: (_, __, ___) =>
-//               const VerificationScreen(isCheckout: true),
-//         ),
-//       );
-
-//       /// SUCCESS CHECKOUT
-//       if (result == true && mounted) {
-//         // Reset check-in provider when checking out
-//         context.read<CheckInProvider>().reset();
-//         context.read<BreakProvider>().resetAll();
-//         // await context.read<AttendanceStatusProvider>().fetchStatus();
-//         await _onRefresh();
-//         // Button state will be updated by the listener
-//       }
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final availableHeight =
-//         MediaQuery.of(context).size.height -
-//         MediaQuery.of(context).padding.top -
-//         MediaQuery.of(context).padding.bottom;
-//     return Scaffold(
-//       backgroundColor: AppStyle.backgroundColor,
-//       body: SafeArea(
-//         child: RefreshIndicator(
-//           onRefresh: _onRefresh,
-//           child: CustomScrollView(
-//             physics: const AlwaysScrollableScrollPhysics(),
-//             slivers: [
-//               SliverToBoxAdapter(
-//                 child: SizedBox(
-//                   height: availableHeight,
-//                   child: Padding(
-//                     padding: EdgeInsets.symmetric(
-//                       horizontal: AppStyle.responsiveWidth(context, 20),
-//                       vertical: AppStyle.responsiveHeight(context, 24),
-//                     ),
-//                     child: Column(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         /// HEADER
-//                         Consumer<ProfileProvider>(
-//                           builder: (context, provider, child) {
-//                             final profile = provider.profile;
-//                             return Header(
-//                               userName: profile?.fullName ?? "Loading...",
-//                               avatarUrl: profile?.faceImage,
-//                             );
-//                           },
-//                         ),
-
-//                         // SizedBox(height: AppStyle.responsiveHeight(context, 40)),
-//                         const LiveClockWidget(),
-
-//                         // SizedBox(height: AppStyle.responsiveHeight(context, 40)),
-//                         _initialStatusLoading
-//                             ? Shimmer.fromColors(
-//                                 baseColor: Colors.grey.shade300,
-//                                 highlightColor: Colors.grey.shade100,
-//                                 child: Container(
-//                                   width: AppStyle.responsiveWidth(context, 220),
-//                                   height: AppStyle.responsiveWidth(
-//                                     context,
-//                                     220,
-//                                   ),
-//                                   decoration: BoxDecoration(
-//                                     shape: BoxShape.circle,
-//                                     color: Colors.grey.shade300,
-//                                   ),
-//                                 ),
-//                               )
-//                             : CheckInButton(
-//                                 status: _checkStatus,
-//                                 onTap: _handleButtonTap,
-//                               ),
-
-//                         // Show break button only when checked in
-//                         if (_checkStatus == CheckStatus.checkedIn)
-//                           const BreakButton(),
-
-//                         // SizedBox(height: AppStyle.responsiveHeight(context, 30)),
-
-//                         // ✅ Use Consumer to get organization name from ProfileProvider
-//                         Consumer<ProfileProvider>(
-//                           builder: (context, provider, child) {
-//                             final organizationName =
-//                                 provider.profile?.organizationName ??
-//                                 'Loading...';
-//                             return LocationBadge(
-//                               locationStatus: _locationStatus,
-//                               locationName:
-//                                   organizationName, // Pass dynamic organization name
-//                             );
-//                           },
-//                         ),
-
-//                         Consumer<AttendanceStatusProvider>(
-//                           builder: (context, attendanceProvider, child) {
-//                             return AttendanceStatsRow(
-//                               checkInTime: attendanceProvider.checkInTime,
-//                               totalHours: attendanceProvider.totalHours,
-//                               checkOutTime: attendanceProvider.checkOutTime,
-//                             );
-//                           },
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -296,6 +17,8 @@ import 'package:provider/provider.dart';
 import 'package:offixo/PROVIDER/Checkin Page/attendance_status_provider.dart';
 import 'package:offixo/PROVIDER/Checkin Page/attendance_type_provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:offixo/SERVICES/battery_saver_service.dart';
+import 'package:offixo/VIEW/Checkin%20page/Widgets/battery_saver_dialog.dart';
 
 /// Local state describing whether we currently have a fresh, usable
 /// location fix for the LOCATION_BASED flow. Drives whether the check-in /
@@ -321,6 +44,21 @@ class _CheckinScreenState extends State<CheckinScreen> {
   _LocationFixStatus _fixStatus = _LocationFixStatus.idle;
   String _locationErrorMessage = '';
 
+  /// Guards against a second check-in/check-out submission firing while
+  /// the first one is still in flight (e.g. a double tap before
+  /// _checkStatus has had a chance to update from the first request's
+  /// response). Without this, a fast second tap can reach the backend
+  /// while the button still shows the pre-submission state, and the
+  /// backend correctly rejects it as a duplicate active session.
+  bool _isSubmitting = false;
+
+  /// Cached provider references, captured while the widget is still
+  /// mounted, so dispose() doesn't need to call context.read() after the
+  /// element has already been unlinked from the tree (which triggers
+  /// "Looking up a deactivated widget's ancestor is unsafe").
+  CheckInProvider? _checkInProviderRef;
+  CheckOutProvider? _checkOutProviderRef;
+
   @override
   void initState() {
     super.initState();
@@ -328,6 +66,9 @@ class _CheckinScreenState extends State<CheckinScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final checkInProvider = context.read<CheckInProvider>();
       final checkOutProvider = context.read<CheckOutProvider>();
+
+      _checkInProviderRef = checkInProvider;
+      _checkOutProviderRef = checkOutProvider;
 
       checkInProvider.addListener(_onCheckInProviderChanged);
       checkOutProvider.addListener(_onCheckOutProviderChanged);
@@ -356,12 +97,12 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
       if (!mounted) return;
 
-      final isCheckedIn =
-          context.read<AttendanceStatusProvider>().isCheckedIn;
+      final isCheckedIn = context.read<AttendanceStatusProvider>().isCheckedIn;
 
       setState(() {
-        _checkStatus =
-            isCheckedIn ? CheckStatus.checkedIn : CheckStatus.checkedOut;
+        _checkStatus = isCheckedIn
+            ? CheckStatus.checkedIn
+            : CheckStatus.checkedOut;
         _initialStatusLoading = false;
       });
 
@@ -376,10 +117,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
   @override
   void dispose() {
-    context.read<CheckInProvider>().removeListener(_onCheckInProviderChanged);
-    context
-        .read<CheckOutProvider>()
-        .removeListener(_onCheckOutProviderChanged);
+    _checkInProviderRef?.removeListener(_onCheckInProviderChanged);
+    _checkOutProviderRef?.removeListener(_onCheckOutProviderChanged);
     super.dispose();
   }
 
@@ -423,8 +162,9 @@ class _CheckinScreenState extends State<CheckinScreen> {
     final isCheckedIn = context.read<AttendanceStatusProvider>().isCheckedIn;
 
     setState(() {
-      _checkStatus =
-          isCheckedIn ? CheckStatus.checkedIn : CheckStatus.checkedOut;
+      _checkStatus = isCheckedIn
+          ? CheckStatus.checkedIn
+          : CheckStatus.checkedOut;
     });
 
     if (context.read<AttendanceTypeProvider>().isLocationBased) {
@@ -444,6 +184,21 @@ class _CheckinScreenState extends State<CheckinScreen> {
     });
 
     try {
+      final batterySaverOn = await BatterySaverService.instance
+          .isBatterySaverOn();
+
+      if (batterySaverOn) {
+        if (mounted) {
+          setState(() {
+            _fixStatus = _LocationFixStatus.failed;
+            _locationErrorMessage =
+                'Battery Saver is on. Turn it off to check in/out accurately.';
+          });
+
+          await BatterySaverDialog.show(context);
+        }
+        return;
+      }
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
       if (!serviceEnabled) {
@@ -490,7 +245,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
       do {
         position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best,
+          desiredAccuracy: LocationAccuracy.high,
           timeLimit: const Duration(seconds: 15),
         );
 
@@ -518,13 +273,29 @@ class _CheckinScreenState extends State<CheckinScreen> {
   }
 
   Future<void> _handleButtonTap() async {
-    final isLocationBased =
-        context.read<AttendanceTypeProvider>().isLocationBased;
+    // Ignore taps while a previous check-in/check-out is still in flight.
+    if (_isSubmitting) return;
 
-    if (isLocationBased) {
-      await _handleLocationBasedTap();
-    } else {
-      await _handleFaceBasedTap();
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final isLocationBased = context
+          .read<AttendanceTypeProvider>()
+          .isLocationBased;
+
+      if (isLocationBased) {
+        await _handleLocationBasedTap();
+      } else {
+        await _handleFaceBasedTap();
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
     }
   }
 
@@ -659,18 +430,20 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight =
+        MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
 
     final attendanceTypeProvider = context.watch<AttendanceTypeProvider>();
     final isLocationBased = attendanceTypeProvider.isLocationBased;
 
-    // Button is only gated by the location fix for LOCATION_BASED orgs.
-    // FACE_BASED keeps its current always-enabled behaviour (the
-    // VerificationScreen handles its own face + location checks).
+    // Button is gated by the location fix for LOCATION_BASED orgs, and by
+    // _isSubmitting for both flows so a second tap can't fire while a
+    // check-in/check-out request is still in flight.
     final bool buttonEnabled =
-        !isLocationBased || _fixStatus == _LocationFixStatus.ready;
+        !_isSubmitting &&
+        (!isLocationBased || _fixStatus == _LocationFixStatus.ready);
 
     return Scaffold(
       backgroundColor: AppStyle.backgroundColor,
@@ -709,20 +482,23 @@ class _CheckinScreenState extends State<CheckinScreen> {
                                 baseColor: Colors.grey.shade300,
                                 highlightColor: Colors.grey.shade100,
                                 child: Container(
-                                  width:
-                                      AppStyle.responsiveWidth(context, 220),
-                                  height:
-                                      AppStyle.responsiveWidth(context, 220),
+                                  width: AppStyle.responsiveWidth(context, 220),
+                                  height: AppStyle.responsiveWidth(
+                                    context,
+                                    220,
+                                  ),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.grey.shade300,
                                   ),
                                 ),
                               )
-                            : CheckInButton(
+                                                        : CheckInButton(
                                 status: _checkStatus,
                                 onTap: _handleButtonTap,
                                 enabled: buttonEnabled,
+                                isFetchingLocation: isLocationBased &&
+                                    _fixStatus == _LocationFixStatus.loading,
                               ),
 
                         // Location-based orgs: surface why the button is
@@ -764,7 +540,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                           builder: (context, provider, child) {
                             final organizationName =
                                 provider.profile?.organizationName ??
-                                    'Loading...';
+                                'Loading...';
                             return LocationBadge(
                               locationStatus: _locationStatus,
                               locationName: organizationName,

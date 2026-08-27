@@ -55,4 +55,15 @@ class ApiConfig {
   static String get attendanceTypeUrl {
     return '$baseUrl/api/member/attendance-type/';
   }
+
+    static String medicalCertificateUrl(int leaveRequestId) =>
+      '$baseUrl/api/leave/requests/$leaveRequestId/medical-certificate/';
+
+    static String get forgotPasswordSendOtpUrl {
+    return '$baseUrl/api/accounts/forgot-password/send-otp/';
+  }
+
+  static String get forgotPasswordResetUrl {
+    return '$baseUrl/api/accounts/forgot-password/reset/';
+  }
 }

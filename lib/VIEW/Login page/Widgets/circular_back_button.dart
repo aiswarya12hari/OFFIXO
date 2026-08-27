@@ -3,14 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
 
 class CircularBackButton extends StatelessWidget {
-  const CircularBackButton({super.key});
+  final VoidCallback? onTap;
+
+  const CircularBackButton({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        SystemNavigator.pop();
-      },
+      onTap: onTap ??
+          () {
+            SystemNavigator.pop();
+          },
       child: Container(
         height: 52,
         width: 52,

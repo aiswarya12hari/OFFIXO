@@ -149,18 +149,41 @@ class Header extends StatelessWidget {
                   ? Image.network(
                       avatarUrl!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Icon(
-                        Icons.person,
-                        size: 28,
-                        color: AppStyle.primaryColor,
-                      ),
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return _buildInitialAvatar(context);
+                      },
+                      errorBuilder: (_, __, ___) =>
+                          _buildInitialAvatar(context),
                     )
-                  : Icon(Icons.person, size: 28, color: AppStyle.primaryColor),
+                  : _buildInitialAvatar(context),
             ),
           ),
         ),
       ],
     );
+  }
+
+   /// ── INITIAL LETTER PLACEHOLDER ──
+  Widget _buildInitialAvatar(BuildContext context) {
+    return Container(
+      color: const Color(0xFFE8F4FD),
+      alignment: Alignment.center,
+      child: Text(
+        _getInitial(userName),
+        style: AppStyle.jakartaText(
+          context: context,
+          size: 20,
+          color: AppStyle.primaryColor,
+          weight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  String _getInitial(String name) {
+    final trimmed = name.trim();
+    return trimmed.isEmpty ? '?' : trimmed[0].toUpperCase();
   }
 
   /// ── REUSABLE STYLED MENU ITEM ──

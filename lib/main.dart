@@ -7,6 +7,7 @@ import 'package:offixo/PROVIDER/Checkin%20Page/attendance_type_provider.dart';
 import 'package:offixo/PROVIDER/Checkin%20Page/break_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_balance_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_provider.dart';
+import 'package:offixo/PROVIDER/Login%20Page/forgot_password_provider.dart';
 import 'package:offixo/PROVIDER/Login%20Page/login_provider.dart';
 import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
 import 'package:offixo/PROVIDER/Verification%20Page/checkin_provider.dart';
@@ -38,6 +39,7 @@ class OffixoApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => ForgotPasswordProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => CheckInProvider()),
         ChangeNotifierProvider(create: (_) => CheckOutProvider()),

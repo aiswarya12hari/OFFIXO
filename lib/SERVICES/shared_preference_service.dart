@@ -268,6 +268,12 @@ class SharedPreferenceService {
   static const String accessTokenKey = 'access_token';
   static const String refreshTokenKey = 'refresh_token';
 
+  /// Persists the current break state locally so it survives process
+  /// death / app restarts. The break-status API does not report an
+  /// active break, so this is the only source of truth we have for
+  /// restoring the UI to "Resume Work" after the app is recreated.
+  static const String onBreakKey = 'is_on_break';
+
   static Future<void> saveAccessToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(accessTokenKey, token);
@@ -286,6 +292,19 @@ class SharedPreferenceService {
   static Future<String?> getRefreshToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(refreshTokenKey);
+  }
+
+  /// Persists whether the user is currently on a break.
+  static Future<void> saveBreakState(bool isOnBreak) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(onBreakKey, isOnBreak);
+  }
+
+  /// Reads the last-persisted break state. Defaults to false (not on
+  /// break) if nothing has ever been saved.
+  static Future<bool> getBreakState() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(onBreakKey) ?? false;
   }
 
   static Future<void> clearData() async {

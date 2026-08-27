@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
+import 'package:offixo/VIEW/Login%20page/forgot_password_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FooterLinks extends StatelessWidget {
@@ -19,10 +20,6 @@ class FooterLinks extends StatelessWidget {
     } catch (e) {
       debugPrint('Error launching $urlString: $e');
     }
-  }
-
-  Future<void> _launchContactAdmin() {
-    return _launchUrl('https://www.techfifoinnovations.com/');
   }
 
   Future<void> _launchPrivacyPolicy() {
@@ -50,9 +47,16 @@ class FooterLinks extends StatelessWidget {
                 ),
 
                 TextSpan(
-                  text: "Contact Admin",
+                  text: "Reset it",
                   recognizer: TapGestureRecognizer()
-                    ..onTap = _launchContactAdmin,
+                    ..onTap = () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ForgotPasswordScreen(),
+                        ),
+                      );
+                    },
                   style: AppStyle.text(
                     context: context,
                     size: 14,

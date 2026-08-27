@@ -4,7 +4,9 @@ import 'package:offixo/MODEL/leave_model.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_balance_provider.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_provider.dart';
 import 'package:offixo/VIEW/Leave%20Page/leave_request_screen.dart';
+import 'package:offixo/VIEW/Leave%20Page/widgets/leave_shimmer_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:offixo/VIEW/Leave%20Page/leave_detail_screen.dart';
 
 class LeaveScreen extends StatefulWidget {
   const LeaveScreen({super.key});
@@ -67,9 +69,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
       body: Consumer<LeaveProvider>(
         builder: (context, provider, _) {
           if (provider.isFetching) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppStyle.primaryColor),
-            );
+            return const LeaveListShimmer();
           }
 
           if (provider.fetchError != null) {
@@ -168,9 +168,23 @@ class _LeaveList extends StatelessWidget {
           );
         }
 
+                final leave = leaves[index - 1];
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: _LeaveCard(leave: leaves[index - 1]),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ChangeNotifierProvider.value(
+                    value: context.read<LeaveProvider>(),
+                    child: LeaveDetailScreen(leave: leave),
+                  ),
+                ),
+              );
+            },
+            child: _LeaveCard(leave: leave),
+          ),
         );
       },
     );

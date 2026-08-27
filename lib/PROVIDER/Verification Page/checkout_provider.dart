@@ -57,7 +57,7 @@
 
 //         do {
 //           position = await Geolocator.getCurrentPosition(
-//             desiredAccuracy: LocationAccuracy.best,
+//             desiredAccuracy: LocationAccuracy.high,
 //             timeLimit: const Duration(seconds: 15),
 //           );
 
@@ -216,7 +216,7 @@ class CheckOutProvider extends ChangeNotifier {
 
         do {
           position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best,
+            desiredAccuracy: LocationAccuracy.high,
             timeLimit: const Duration(seconds: 15),
           );
 

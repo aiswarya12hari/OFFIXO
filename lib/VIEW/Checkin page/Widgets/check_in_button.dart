@@ -199,7 +199,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
@@ -216,11 +215,18 @@ class CheckInButton extends StatefulWidget {
   /// radius).
   final bool enabled;
 
+  /// When true, shows "Fetching location…" instead of the normal label.
+  /// Used only for the LOCATION_BASED flow's genuine pre-check-in
+  /// location fetch — not for the brief disabled window while a tap is
+  /// being handled (e.g. navigating to the Verification Screen).
+  final bool isFetchingLocation;
+
   const CheckInButton({
     super.key,
     required this.status,
     required this.onTap,
     this.enabled = true,
+    this.isFetchingLocation = false,
   });
 
   @override
@@ -322,16 +328,16 @@ class _CheckInButtonState extends State<CheckInButton>
                                 const Color(0xFFC0C0C0),
                               ]
                             : _isCheckedIn
-                                ? [
-                                    const Color(0xFFFFDDCC),
-                                    const Color(0xFFFFCCB3),
-                                    const Color(0xFFFFB347),
-                                  ]
-                                : [
-                                    const Color(0xFFD4F5DC),
-                                    const Color(0xFFB8E6C1),
-                                    const Color(0xFF8ED4A0),
-                                  ],
+                            ? [
+                                const Color(0xFFFFDDCC),
+                                const Color(0xFFFFCCB3),
+                                const Color(0xFFFFB347),
+                              ]
+                            : [
+                                const Color(0xFFD4F5DC),
+                                const Color(0xFFB8E6C1),
+                                const Color(0xFF8ED4A0),
+                              ],
 
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -351,15 +357,15 @@ class _CheckInButtonState extends State<CheckInButton>
                         colors: disabled
                             ? [const Color(0xFF9E9E9E), const Color(0xFF757575)]
                             : _isCheckedIn
-                                ? [
-                                    const Color(0xFFFFB347),
-                                    const Color(0xFFFF8C00),
-                                    const Color(0xFFE65C00),
-                                  ]
-                                : [
-                                    const Color(0xFF5DD16F),
-                                    const Color(0xFF1E8C34),
-                                  ],
+                            ? [
+                                const Color(0xFFFFB347),
+                                const Color(0xFFFF8C00),
+                                const Color(0xFFE65C00),
+                              ]
+                            : [
+                                const Color(0xFF5DD16F),
+                                const Color(0xFF1E8C34),
+                              ],
 
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -402,7 +408,9 @@ class _CheckInButtonState extends State<CheckInButton>
                 SizedBox(height: AppStyle.responsiveHeight(context, 8)),
 
                 Text(
-                  disabled ? 'Locating…' : _label,
+                  widget.isFetchingLocation ? 'Fetching location…' : _label,
+
+                  textAlign: TextAlign.center,
 
                   style: AppStyle.jakartaText(
                     context: context,

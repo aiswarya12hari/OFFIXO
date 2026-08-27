@@ -4,11 +4,13 @@ import 'package:offixo/CORE/Widget/app_style.dart';
 class ContinueButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool isLoading;
+  final String label;
 
   const ContinueButton({
     super.key,
     required this.onTap,
     required this.isLoading,
+    this.label = "Log in",
   });
 
   @override
@@ -61,7 +63,7 @@ class ContinueButton extends StatelessWidget {
                   ),
                 )
               : Text(
-                  "Log in",
+                  label,
                   style: AppStyle.text(
                     context: context,
                     size: 18,
