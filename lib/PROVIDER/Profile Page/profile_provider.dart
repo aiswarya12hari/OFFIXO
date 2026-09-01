@@ -15,80 +15,90 @@ class ProfileProvider extends ChangeNotifier {
 
   ProfileModel? get profile => _profile;
 
-  Future<void> fetchProfile() async {
+  Future<void> fetchProfile({bool isRetry = false}) async {
     try {
       _isLoading = true;
       notifyListeners();
 
       debugPrint("========== PROFILE API ==========");
-      debugPrint(
-        "PROFILE URL: ${ApiConfig.memberProfileUrl}",
-      );
+      debugPrint("PROFILE URL: ${ApiConfig.memberProfileUrl}");
 
       /// Get validated auth headers
-      final headers =
-          await SharedPreferenceService.getAuthHeaders();
+      final headers = await SharedPreferenceService.getAuthHeaders();
 
       /// API CALL
       final response = await http.get(
-        Uri.parse(
-          ApiConfig.memberProfileUrl,
-        ),
+        Uri.parse(ApiConfig.memberProfileUrl),
         headers: headers,
       );
 
-      debugPrint(
-        "STATUS CODE: ${response.statusCode}",
-      );
+      debugPrint("STATUS CODE: ${response.statusCode}");
 
-      debugPrint(
-        "RESPONSE BODY: ${response.body}",
-      );
+      debugPrint("RESPONSE BODY: ${response.body}");
 
       /// SUCCESS
       if (response.statusCode == 200) {
-        final data =
-            jsonDecode(response.body);
+        final data = jsonDecode(response.body);
 
         if (data["success"] == true) {
-          _profile =
-              ProfileModel.fromJson(
-            data,
+          _profile = ProfileModel.fromJson(data);
+
+          debugPrint("PROFILE FETCHED SUCCESSFULLY");
+        } else {
+          debugPrint("PROFILE API SUCCESS FALSE");
+        }
+      }
+      /// SESSION EXPIRED
+      /// POSSIBLE SESSION EXPIRY — attempt a silent refresh before
+      /// concluding the session is actually dead.
+      else if (response.statusCode == 401) {
+        if (!isRetry) {
+          debugPrint(
+            '[AUTO-LOGOUT-DEBUG] ProfileProvider: 401 on profile fetch, attempting token refresh',
           );
 
-          debugPrint(
-            "PROFILE FETCHED SUCCESSFULLY",
-          );
+          final outcome = await SharedPreferenceService.refreshAccessToken();
+
+          if (outcome == RefreshOutcome.success) {
+            debugPrint(
+              '[AUTO-LOGOUT-DEBUG] ProfileProvider: refresh succeeded, retrying fetchProfile',
+            );
+            return fetchProfile(isRetry: true);
+          } else if (outcome == RefreshOutcome.invalidToken) {
+            debugPrint(
+              '[AUTO-LOGOUT-DEBUG] ProfileProvider: refresh token rejected — session genuinely expired',
+            );
+            await SharedPreferenceService.clearData(
+              reason:
+                  'ProfileProvider.fetchProfile: 401 + refresh token rejected',
+            );
+          } else {
+            debugPrint(
+              '[AUTO-LOGOUT-DEBUG] ProfileProvider: refresh could not be confirmed (network issue) — NOT clearing session',
+            );
+          }
         } else {
           debugPrint(
-            "PROFILE API SUCCESS FALSE",
+            '[AUTO-LOGOUT-DEBUG] ProfileProvider: still 401 after refresh+retry — clearing session',
+          );
+          await SharedPreferenceService.clearData(
+            reason:
+                'ProfileProvider.fetchProfile: 401 persisted after refresh retry',
           );
         }
       }
-
-      /// SESSION EXPIRED
-      else if (response.statusCode == 401) {
-        debugPrint(
-          "SESSION EXPIRED",
-        );
-
-        await SharedPreferenceService.clearData();
-      }
-
       /// OTHER ERROR
       else {
-        debugPrint(
-          "PROFILE API FAILED",
-        );
+        debugPrint("PROFILE API FAILED");
       }
     } catch (e) {
-      debugPrint(
-        "PROFILE ERROR: $e",
-      );
+      debugPrint("PROFILE ERROR: $e");
 
       /// If token validation fails
+            /// getAuthHeaders() throws this when there's no token stored at all
+      /// (already logged out) — nothing to refresh, just log it.
       if (e.toString().contains('Session expired')) {
-        await SharedPreferenceService.clearData();
+        debugPrint('[AUTO-LOGOUT-DEBUG] ProfileProvider: no token present when fetchProfile ran');
       }
     } finally {
       _isLoading = false;

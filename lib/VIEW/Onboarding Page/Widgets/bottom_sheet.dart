@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offixo/CORE/Widget/app_style.dart';
 import 'package:offixo/MODEL/onboarding_model.dart';
 import 'package:offixo/VIEW/Onboarding%20Page/Widgets/action_button.dart';
 import 'package:offixo/VIEW/Onboarding%20Page/Widgets/outward_u_shape_clipper.dart';
@@ -24,6 +25,12 @@ class OnboardingBottomSheet extends StatelessWidget {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     final screenHeight = MediaQuery.of(context).size.height;
 
+    final horizontalPadding = AppStyle.responsiveWidth(context, 32);
+    final topPadding = AppStyle.responsiveHeight(context, 75);
+    final bottomExtraPadding = AppStyle.responsiveHeight(context, 16);
+    final bottomFallbackPadding = AppStyle.responsiveHeight(context, 28);
+    final buttonSpacing = AppStyle.responsiveHeight(context, 16);
+
     return ClipPath(
       clipper: OutwardUShapeClipper(screenHeight: screenHeight),
       child: Container(
@@ -32,22 +39,29 @@ class OnboardingBottomSheet extends StatelessWidget {
         color: const Color(0xFFF9F9F9),
         child: Padding(
           padding: EdgeInsets.fromLTRB(
-            32,
-            75,
-            32,
-            bottomPadding > 0 ? bottomPadding + 16 : 28,
+            horizontalPadding,
+            topPadding,
+            horizontalPadding,
+            bottomPadding > 0
+                ? bottomPadding + bottomExtraPadding
+                : bottomFallbackPadding,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: OnboardingTextContent(page: pages[currentPage]),
+                child: Center(
+                  child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    child: OnboardingTextContent(page: pages[currentPage]),
+                  ),
+                ),
               ),
               OnboardingPageIndicator(
                 pageCount: pages.length,
                 currentPage: currentPage,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: buttonSpacing),
               OnboardingActionButton(
                 buttonKey: buttonKey,
                 isLastPage: currentPage == pages.length - 1,

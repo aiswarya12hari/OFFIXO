@@ -95,6 +95,13 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
       await context.read<AttendanceStatusProvider>().fetchStatus();
 
+      // Restore the persisted break state (see BreakProvider.hydrate) so
+      // "Resume Work" survives an app restart while a break is still
+      // active. This was previously never called, which is why the break
+      // state was lost on app relaunch even though it was already being
+      // saved to SharedPreferences correctly.
+      await context.read<BreakProvider>().hydrate();
+
       if (!mounted) return;
 
       final isCheckedIn = context.read<AttendanceStatusProvider>().isCheckedIn;
@@ -493,11 +500,12 @@ class _CheckinScreenState extends State<CheckinScreen> {
                                   ),
                                 ),
                               )
-                                                        : CheckInButton(
+                            : CheckInButton(
                                 status: _checkStatus,
                                 onTap: _handleButtonTap,
                                 enabled: buttonEnabled,
-                                isFetchingLocation: isLocationBased &&
+                                isFetchingLocation:
+                                    isLocationBased &&
                                     _fixStatus == _LocationFixStatus.loading,
                               ),
 

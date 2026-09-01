@@ -1,91 +1,3 @@
-// class LeaveModel {
-//   final int id;
-//   final int member;
-//   final String memberName;
-//   final String memberEmpNo;
-//   final int leaveType;
-//   final String leaveTypeName;
-//   final String fromDate;
-//   final String toDate;
-//   final String session;
-//   final String numberOfDays;
-//   final String reason;
-//   final String status;
-//   final String appliedAt;
-//   final String? reviewedBy;
-//   final String? reviewedByName;
-//   final String? reviewedAt;
-//   final String? rejectionReason;
-//   final String? medicalCertificate;
-
-//   LeaveModel({
-//     required this.id,
-//     required this.member,
-//     required this.memberName,
-//     required this.memberEmpNo,
-//     required this.leaveType,
-//     required this.leaveTypeName,
-//     required this.fromDate,
-//     required this.toDate,
-//     required this.session,
-//     required this.numberOfDays,
-//     required this.reason,
-//     required this.status,
-//     required this.appliedAt,
-//     this.reviewedBy,
-//     this.reviewedByName,
-//     this.reviewedAt,
-//     this.rejectionReason,
-//     this.medicalCertificate,
-//   });
-
-//   factory LeaveModel.fromJson(Map<String, dynamic> json) {
-//     return LeaveModel(
-//       id: json['id'],
-//       member: json['member'],
-//       memberName: json['member_name'],
-//       memberEmpNo: json['member_emp_no'],
-//       leaveType: json['leave_type'],
-//       leaveTypeName: json['leave_type_name'],
-//       fromDate: json['from_date'],
-//       toDate: json['to_date'],
-//       session: json['session'],
-//       numberOfDays: json['number_of_days'],
-//       reason: json['reason'],
-//       status: json['status'],
-//       appliedAt: json['applied_at'],
-//       reviewedBy: json['reviewed_by']?.toString(),
-//       reviewedByName: json['reviewed_by_name'],
-//       reviewedAt: json['reviewed_at'],
-//       rejectionReason: json['rejection_reason'],
-//       medicalCertificate: json['medical_certificate'],
-//     );
-//   }
-
-//   LeaveModel copyWith({String? medicalCertificate}) {
-//     return LeaveModel(
-//       id: id,
-//       member: member,
-//       memberName: memberName,
-//       memberEmpNo: memberEmpNo,
-//       leaveType: leaveType,
-//       leaveTypeName: leaveTypeName,
-//       fromDate: fromDate,
-//       toDate: toDate,
-//       session: session,
-//       numberOfDays: numberOfDays,
-//       reason: reason,
-//       status: status,
-//       appliedAt: appliedAt,
-//       reviewedBy: reviewedBy,
-//       reviewedByName: reviewedByName,
-//       reviewedAt: reviewedAt,
-//       rejectionReason: rejectionReason,
-//       medicalCertificate: medicalCertificate ?? this.medicalCertificate,
-//     );
-//   }
-// }
-
 class LeaveModel {
   final int id;
   final int member;
@@ -105,6 +17,7 @@ class LeaveModel {
   final String? reviewedAt;
   final String? rejectionReason;
   final String? medicalCertificate;
+  final String? medicalCertificateUrl;
 
   LeaveModel({
     required this.id,
@@ -125,6 +38,7 @@ class LeaveModel {
     this.reviewedAt,
     this.rejectionReason,
     this.medicalCertificate,
+    this.medicalCertificateUrl,
   });
 
   factory LeaveModel.fromJson(Map<String, dynamic> json) {
@@ -147,6 +61,7 @@ class LeaveModel {
       reviewedAt: json['reviewed_at'],
       rejectionReason: json['rejection_reason'],
       medicalCertificate: json['medical_certificate'],
+      medicalCertificateUrl: json['medical_certificate_url'],
     );
   }
 }

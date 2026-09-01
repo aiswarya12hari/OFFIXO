@@ -1,6 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:offixo/CORE/Widget/app_style.dart';
 // import 'package:offixo/PROVIDER/Profile%20Page/profile_provider.dart';
+// import 'package:offixo/VIEW/Checkin%20page/Widgets/profile_shimmer_widgets.dart';
 // import 'package:provider/provider.dart';
 
 // class ProfileScreen extends StatefulWidget {
@@ -50,166 +51,174 @@
 
 //       body: Consumer<ProfileProvider>(
 //         builder: (context, provider, child) {
-//           if (provider.isLoading) {
-//             return const Center(child: CircularProgressIndicator());
-//           }
+//           return AnimatedSwitcher(
+//             duration: const Duration(milliseconds: 300),
+//             child: _buildBody(provider),
+//           );
+//         },
+//       ),
+//     );
+//   }
 
-//           final profile = provider.profile;
+//   Widget _buildBody(ProfileProvider provider) {
+//     if (provider.isLoading) {
+//       return const ProfileScreenShimmer(key: ValueKey('profile-shimmer'));
+//     }
 
-//           if (profile == null) {
-//             return const Center(child: Text("No profile data found"));
-//           }
+//     final profile = provider.profile;
 
-//           return SafeArea(
-//             child: SingleChildScrollView(
+//     if (profile == null) {
+//       return const Center(
+//         key: ValueKey('profile-error'),
+//         child: Text("No profile data found"),
+//       );
+//     }
+
+//     return SafeArea(
+//       key: const ValueKey('profile-content'),
+//       child: SingleChildScrollView(
+//         padding: const EdgeInsets.all(20),
+//         child: Column(
+//           children: [
+//             CircleAvatar(
+//               radius: 50,
+//               backgroundImage: profile.faceImage.isNotEmpty
+//                   ? NetworkImage(profile.faceImage)
+//                   : null,
+//               child: profile.faceImage.isEmpty
+//                   ? const Icon(Icons.person, size: 40)
+//                   : null,
+//             ),
+
+//             const SizedBox(height: 15),
+
+//             Text(
+//               profile.fullName,
+//               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+//             ),
+
+//             Text(profile.designation),
+
+//             const SizedBox(height: 25),
+
+//             Container(
 //               padding: const EdgeInsets.all(20),
+//               decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.circular(16),
+//               ),
 //               child: Column(
 //                 children: [
-//                   CircleAvatar(
-//                     radius: 50,
-//                     backgroundImage: profile.faceImage.isNotEmpty
-//                         ? NetworkImage(profile.faceImage)
-//                         : null,
-//                     child: profile.faceImage.isEmpty
-//                         ? const Icon(Icons.person, size: 40)
-//                         : null,
+//                   _profileRow(Icons.badge, "Employee No", profile.empNo),
+
+//                   _divider(),
+
+//                   _profileRow(Icons.email, "Email", profile.email),
+
+//                   _divider(),
+
+//                   _profileRow(Icons.phone, "Phone", profile.phoneNumber),
+
+//                   _divider(),
+
+//                   _profileRow(
+//                     Icons.work,
+//                     "Member Type",
+//                     _formatMemberType(profile.memberType),
 //                   ),
 
-//                   const SizedBox(height: 15),
+//                   _divider(),
 
-//                   Text(
-//                     profile.fullName,
-//                     style: const TextStyle(
-//                       fontSize: 22,
-//                       fontWeight: FontWeight.bold,
-//                     ),
+//                   _profileRow(Icons.person, "Gender", profile.gender),
+
+//                   _divider(),
+
+//                   _profileRow(
+//                     Icons.bloodtype,
+//                     "Blood Group",
+//                     profile.bloodGroup,
 //                   ),
 
-//                   Text(profile.designation),
+//                   _divider(),
 
-//                   const SizedBox(height: 25),
+//                   _profileRow(Icons.cake, "DOB", profile.dateOfBirth),
 
-//                   Container(
-//                     padding: const EdgeInsets.all(20),
-//                     decoration: BoxDecoration(
-//                       color: Colors.white,
-//                       borderRadius: BorderRadius.circular(16),
-//                     ),
-//                     child: Column(
-//                       children: [
-//                         _profileRow(Icons.badge, "Employee No", profile.empNo),
+//                   _divider(),
 
-//                         _divider(),
+//                   _profileRow(
+//                     Icons.location_on,
+//                     "Address",
+//                     profile.presentAddress,
+//                   ),
 
-//                         _profileRow(Icons.email, "Email", profile.email),
+//                   _divider(),
 
-//                         _divider(),
+//                   _profileRow(
+//                     Icons.business,
+//                     "Organization",
+//                     profile.organizationName,
+//                   ),
 
-//                         _profileRow(Icons.phone, "Phone", profile.phoneNumber),
+//                   _divider(),
 
-//                         _divider(),
+//                   _profileRow(
+//                     Icons.category,
+//                     "Org Type",
+//                     profile.organizationType,
+//                   ),
 
-//                         _profileRow(
-//                           Icons.work,
-//                           "Member Type",
-//                           _formatMemberType(profile.memberType),
-//                         ),
+//                   _divider(),
 
-//                         _divider(),
+//                   _profileRow(
+//                     Icons.person_outline,
+//                     "Owner",
+//                     profile.organizationOwner,
+//                   ),
 
-//                         _profileRow(Icons.person, "Gender", profile.gender),
+//                   _divider(),
 
-//                         _divider(),
+//                   _profileRow(
+//                     Icons.location_city,
+//                     "Org Address",
+//                     profile.organizationAddress,
+//                   ),
 
-//                         _profileRow(
-//                           Icons.bloodtype,
-//                           "Blood Group",
-//                           profile.bloodGroup,
-//                         ),
+//                   _divider(),
 
-//                         _divider(),
+//                   _profileRow(
+//                     Icons.call,
+//                     "Org Phone",
+//                     profile.organizationPhone,
+//                   ),
 
-//                         _profileRow(Icons.cake, "DOB", profile.dateOfBirth),
+//                   _divider(),
 
-//                         _divider(),
+//                   _profileRow(
+//                     Icons.calendar_today,
+//                     "Start Date",
+//                     profile.startDate,
+//                   ),
 
-//                         _profileRow(
-//                           Icons.location_on,
-//                           "Address",
-//                           profile.presentAddress,
-//                         ),
+//                   _divider(),
 
-//                         _divider(),
+//                   _profileRow(
+//                     Icons.fingerprint,
+//                     "Biometric",
+//                     profile.isBiometricEnabled ? "Enabled" : "Disabled",
+//                   ),
 
-//                         _profileRow(
-//                           Icons.business,
-//                           "Organization",
-//                           profile.organizationName,
-//                         ),
+//                   _divider(),
 
-//                         _divider(),
-
-//                         _profileRow(
-//                           Icons.category,
-//                           "Org Type",
-//                           profile.organizationType,
-//                         ),
-
-//                         _divider(),
-
-//                         _profileRow(
-//                           Icons.person_outline,
-//                           "Owner",
-//                           profile.organizationOwner,
-//                         ),
-
-//                         _divider(),
-
-//                         _profileRow(
-//                           Icons.location_city,
-//                           "Org Address",
-//                           profile.organizationAddress,
-//                         ),
-
-//                         _divider(),
-
-//                         _profileRow(
-//                           Icons.call,
-//                           "Org Phone",
-//                           profile.organizationPhone,
-//                         ),
-
-//                         _divider(),
-
-//                         _profileRow(
-//                           Icons.calendar_today,
-//                           "Start Date",
-//                           profile.startDate,
-//                         ),
-
-//                         _divider(),
-
-//                         _profileRow(
-//                           Icons.fingerprint,
-//                           "Biometric",
-//                           profile.isBiometricEnabled ? "Enabled" : "Disabled",
-//                         ),
-
-//                         _divider(),
-
-//                         _profileRow(
-//                           Icons.check_circle,
-//                           "Status",
-//                           profile.isActive ? "Active" : "Inactive",
-//                         ),
-//                       ],
-//                     ),
+//                   _profileRow(
+//                     Icons.check_circle,
+//                     "Status",
+//                     profile.isActive ? "Active" : "Inactive",
 //                   ),
 //                 ],
 //               ),
 //             ),
-//           );
-//         },
+//           ],
+//         ),
 //       ),
 //     );
 //   }
@@ -354,10 +363,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             Text(
               profile.fullName,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             Text(profile.designation),
@@ -412,6 +418,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Icons.location_on,
                     "Address",
                     profile.presentAddress,
+                  ),
+
+                  _divider(),
+
+                  _profileRow(
+                    Icons.account_tree,
+                    "Branch",
+                    profile.branchName.isNotEmpty
+                        ? profile.branchName
+                        : "N/A",
                   ),
 
                   _divider(),

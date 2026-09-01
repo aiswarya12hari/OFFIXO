@@ -8,7 +8,6 @@ import 'package:offixo/CORE/Widget/app_style.dart';
 import 'package:offixo/MODEL/leave_model.dart';
 import 'package:offixo/PROVIDER/Leave%20Page/leave_provider.dart';
 
-
 class LeaveDetailScreen extends StatefulWidget {
   final LeaveModel leave;
   const LeaveDetailScreen({super.key, required this.leave});
@@ -225,6 +224,11 @@ class _DetailCard extends StatelessWidget {
           _row('Days', leave.numberOfDays),
           _row('Status', leave.status),
           _row('Reason', leave.reason),
+          _row('Applied At', _fmtDateTime(leave.appliedAt)),
+          if (leave.reviewedByName != null && leave.reviewedByName!.isNotEmpty)
+            _row('Reviewed By', leave.reviewedByName!),
+          if (leave.reviewedAt != null && leave.reviewedAt!.isNotEmpty)
+            _row('Reviewed At', _fmtDateTime(leave.reviewedAt!)),
           if (leave.rejectionReason != null &&
               leave.rejectionReason!.isNotEmpty)
             _row('Rejection Reason', leave.rejectionReason!),
@@ -266,6 +270,33 @@ class _DetailCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _fmtDateTime(String iso) {
+    try {
+      final d = DateTime.parse(iso).toLocal();
+      const months = [
+        '',
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      final hour = d.hour > 12 ? d.hour - 12 : (d.hour == 0 ? 12 : d.hour);
+      final amPm = d.hour >= 12 ? 'PM' : 'AM';
+      return '${d.day.toString().padLeft(2, '0')} ${months[d.month]} ${d.year}, '
+          '${hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')} $amPm';
+    } catch (_) {
+      return iso;
+    }
   }
 }
 

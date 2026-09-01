@@ -4,6 +4,7 @@ import 'package:offixo/PROVIDER/Leave%20Page/leave_provider.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/delete_account_dialog.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/logout_dialog.dart';
 import 'package:offixo/VIEW/Checkin%20page/Widgets/profile_screen.dart';
+import 'package:offixo/VIEW/Checkin%20page/Widgets/total_working_hours_screen.dart';
 import 'package:offixo/VIEW/Leave%20page/leave_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final menuWidth = AppStyle.responsiveWidth(context, 190);
+    final menuWidth = AppStyle.responsiveWidth(context, 220);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +50,7 @@ class Header extends StatelessWidget {
 
         /// PROFILE IMAGE + MENU
         PopupMenuButton<String>(
-          constraints: const BoxConstraints(minWidth: 220, maxWidth: 220),
+          constraints: BoxConstraints(minWidth: menuWidth, maxWidth: menuWidth),
           onSelected: (value) {
             if (value == 'logout') {
               showDialog(
@@ -65,6 +66,12 @@ class Header extends StatelessWidget {
               Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (_) => const LeaveScreen()));
+            } else if (value == 'total_working_hours') {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const TotalWorkingHoursScreen(),
+                ),
+              );
             } else if (value == 'delete_account') {
               showDialog(
                 context: context,
@@ -99,6 +106,16 @@ class Header extends StatelessWidget {
               label: 'Leave',
               iconColor: const Color(0xFF0EA5E9),
               iconBg: const Color(0xFFE0F2FE),
+              menuWidth: menuWidth,
+            ),
+
+            /// ── TOTAL WORKING HOURS ──
+            _styledItem(
+              value: 'total_working_hours',
+              icon: Icons.timer_outlined,
+              label: 'Working Hours',
+              iconColor: const Color(0xFF10B981),
+              iconBg: const Color(0xFFD1FAE5),
               menuWidth: menuWidth,
             ),
 
@@ -164,7 +181,7 @@ class Header extends StatelessWidget {
     );
   }
 
-   /// ── INITIAL LETTER PLACEHOLDER ──
+  /// ── INITIAL LETTER PLACEHOLDER ──
   Widget _buildInitialAvatar(BuildContext context) {
     return Container(
       color: const Color(0xFFE8F4FD),
@@ -200,12 +217,7 @@ class Header extends StatelessWidget {
     return PopupMenuItem<String>(
       value: value,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-      // child: SizedBox(
-      //   width: menuWidth,
-      //   child: Row(
-      //     children: [
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             width: 34,
@@ -217,12 +229,16 @@ class Header extends StatelessWidget {
             child: Icon(icon, size: 18, color: iconColor),
           ),
           const SizedBox(width: 12),
-          Text(
-            label,
-            style: AppStyle.textStatic(
-              size: 13.5,
-              color: labelColor,
-              weight: labelWeight,
+          Expanded(
+            child: Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: AppStyle.textStatic(
+                size: 13.5,
+                color: labelColor,
+                weight: labelWeight,
+              ),
             ),
           ),
         ],
