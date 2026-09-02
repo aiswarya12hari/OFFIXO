@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:offixo/CORE/Widget/app_style.dart';
-import 'package:offixo/SERVICES/battery_saver_service.dart';
+
+enum BatterySaverDialogResult { cancelled, openedSettings }
 
 class BatterySaverDialog extends StatelessWidget {
   const BatterySaverDialog({super.key});
 
-  static Future<void> show(BuildContext context) {
-    return showDialog<void>(
+  static Future<BatterySaverDialogResult> show(BuildContext context) async {
+    final result = await showDialog<BatterySaverDialogResult>(
       context: context,
       barrierDismissible: false,
       builder: (_) => const BatterySaverDialog(),
     );
+
+    return result ?? BatterySaverDialogResult.cancelled;
   }
 
   @override
@@ -37,16 +40,13 @@ class BatterySaverDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(BatterySaverDialogResult.cancelled);
           },
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: () async {
-            Navigator.of(context).pop();
-
-            await BatterySaverService.instance
-                .openBatterySaverSettings();
+          onPressed: () {
+            Navigator.of(context).pop(BatterySaverDialogResult.openedSettings);
           },
           child: const Text('Open Settings'),
         ),

@@ -12,24 +12,14 @@ class BatterySaverService {
   final Battery _battery = Battery();
 
   /// Returns true when Android Battery Saver / Low Power Mode is ON.
+  ///
+  /// DISABLED: the battery-saver check/dialog is temporarily turned off
+  /// across the app. This always returns false so every call site
+  /// (check-in/checkout LOCATION_BASED flow and the FACE_BASED
+  /// VerificationScreen flow) treats battery saver as OFF and skips the
+  /// dialog/settings redirect entirely.
   Future<bool> isBatterySaverOn() async {
-    try {
-      final isOn = await _battery.isInBatterySaveMode;
-
-      debugPrint(
-        '[BATTERY SAVER] Current status: ${isOn ? "ON" : "OFF"}',
-      );
-
-      return isOn;
-    } catch (e) {
-      debugPrint(
-        '[BATTERY SAVER] Failed to read battery saver status: $e',
-      );
-
-      // Do not block the attendance flow if the device/plugin
-      // cannot provide the battery saver status.
-      return false;
-    }
+    return false;
   }
 
   /// Opens Android Battery Saver settings.
